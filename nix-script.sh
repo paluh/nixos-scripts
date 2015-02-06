@@ -78,7 +78,7 @@ do
         ;;
 
     "-h" )
-        usage()
+        usage
         exit 1
         ;;
 
