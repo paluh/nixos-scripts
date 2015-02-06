@@ -100,7 +100,7 @@ do
     esac
 done
 
-[[ ! -f $CONFIGFILE ]] && echo "No config file: '$CONFIGFILE'" && exit 1
+[ ! -f $CONFIGFILE ] && echo "No config file: '$CONFIGFILE'" && exit 1
 
 if [[ $LIST_COMMNADS -eq 1 ]]
 then
