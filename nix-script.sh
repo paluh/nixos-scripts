@@ -24,8 +24,16 @@ usage() {
 EOS
 }
 
+LIST_COMMANDS=0
+VERBOSE=0
+CONFIGFILE=~/.nixscriptsrc
+
 stderr() {
     echo "[$(basename $0)]: $*" >&2
+}
+
+stdout() {
+    [ $VERBOSE -eq 1 ] && echo "[$(basename $0)]: $*"
 }
 
 script_for() {
@@ -45,10 +53,6 @@ shift_n() {
 all_commands() {
     find $(dirname ${BASH_SOURCE[0]}) -type f -name "nix-script-*.sh"
 }
-
-LIST_COMMANDS=0
-VERBOSE=0
-CONFIGFILE=~/.nixscriptsrc
 
 for cmd
 do
@@ -139,4 +143,4 @@ fi
 
 SCRIPT_ARGS=$(shift_n $SHIFT_ARGS $*)
 
-exec $SCRIPT $SCRIPT
+exec $SCRIPT $SCRIPT_ARGS
