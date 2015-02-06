@@ -79,6 +79,7 @@ do
 
     "-v" )
         export VERBOSE=1
+        stdout "Verbose now"
         shift_one_more
         ;;
 
@@ -95,6 +96,7 @@ do
         else
             if [ -z "$COMMAND" ]
             then
+                stdout "Found command: '$cmd'"
                 COMMAND=$cmd
                 shift_one_more
             else
@@ -109,11 +111,13 @@ if [ ! -f $CONFIGFILE ]
 then
     stderr "No config file: '$CONFIGFILE', won't override defaults"
 else
+    stdout "Source config: '$CONFIGFILE'"
     . $CONFIFILE
 fi
 
 if [ $LIST_COMMANDS -eq 1 ]
 then
+    stdout "Listing commands"
     for cmd in $(all_commands)
     do
         echo "$cmd"
@@ -127,6 +131,7 @@ then
     exit 0
 fi
 
+stdout "Searching for script for '$COMMAND'"
 SCRIPT=$(script_for $COMMAND)
 
 if [ ! -f $SCRIPT ]
@@ -141,6 +146,8 @@ then
     exit 1
 fi
 
+stdout "Parsing args for '$COMMAND'"
 SCRIPT_ARGS=$(shift_n $SHIFT_ARGS $*)
 
+stdout "Calling: '$COMMAND $SCRIPT_ARGS'"
 exec $SCRIPT $SCRIPT_ARGS
