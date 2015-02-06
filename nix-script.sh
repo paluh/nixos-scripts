@@ -67,6 +67,13 @@ case $cmd in
     usage()
     exit 1
     ;;
+
+* )
+    if [[ -n $(script_for $cmd) ]]
+    then
+        stderr "Unknown flag / command '$cmd'"
+        exit 1
+    fi
 esac
 
 [[ ! -f $CONFIGFILE ]] && echo "No config file: '$CONFIGFILE'" && exit 1
