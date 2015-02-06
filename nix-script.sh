@@ -111,6 +111,20 @@ then
     exit 0
 fi
 
-COMMAND_ARGS=$(shift_n $SHIFT_ARGS $*)
+SCRIPT=$(script_for $COMMAND)
 
-exec $(script_for $COMMAND)
+if [ ! -f $SCRIPT ]
+then
+    stderr "Not available: $COMMAND -> $SCRIPT"
+    exit 1
+fi
+
+if [[ ! -x $SCRIPT ]]
+then
+    stderr "Not executeable: $SCRIPT"
+    exit 1
+fi
+
+SCRIPT_ARGS=$(shift_n $SHIFT_ARGS $*)
+
+exec $SCRIPT $SCRIPT
