@@ -96,4 +96,4 @@ then
     exit 0
 fi
 
-exec nixos-scripts-$cmd $*
+exec $(script_for $COMMAND)
