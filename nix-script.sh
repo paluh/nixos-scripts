@@ -24,6 +24,10 @@ usage() {
 EOS
 }
 
+stderr() {
+    echo "[$(basename $0)]: $*" >&2
+}
+
 VERBOSE=0
 CONFIGFILE=~/.nixscriptsrc
 
