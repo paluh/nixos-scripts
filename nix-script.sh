@@ -100,7 +100,12 @@ do
     esac
 done
 
-[ ! -f $CONFIGFILE ] && echo "No config file: '$CONFIGFILE'" && exit 1
+if [ ! -f $CONFIGFILE ]
+then
+    stderr "No config file: '$CONFIGFILE', won't override defaults"
+else
+    . $CONFIFILE
+fi
 
 if [[ $LIST_COMMNADS -eq 1 ]]
 then
