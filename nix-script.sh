@@ -32,6 +32,16 @@ script_for() {
     echo "$(dirname ${BASH_SOURCE[0]})/nix-script-${1}.sh"
 }
 
+SHIFT_ARGS=0
+shift_one_more() {
+    SHIFT_ARGS=$(( SHIFT_ARGS + 1 ))
+}
+
+shift_n() {
+    for n in `seq 0 $1`; do shift; done
+    echo $*
+}
+
 VERBOSE=0
 CONFIGFILE=~/.nixscriptsrc
 
@@ -40,27 +50,27 @@ do
     case $cmd in
     "--list-commands" )
         LIST_COMMANDS=1
-        shift;
+        shift_one_more
         ;;
 
     "-l" )
         LIST_COMMANDS=1
-        shift;
+        shift_one_more
         ;;
 
     "--config" )
         CONFIGFILE=$1
-        shift
+        shift_one_more
         ;;
 
     "-c" )
         CONFIGFILE=$1
-        shift
+        shift_one_more
         ;;
 
     "-v" )
         export VERBOSE=1
-        shift;
+        shift_one_more
         ;;
 
     "-h" )
@@ -77,6 +87,7 @@ do
             if [ -z "$COMMAND" ]
             then
                 COMMAND=$cmd
+                shift_one_more
             else
                 stderr "Found two commands, cannot execute two commands."
                 exit 1
@@ -95,5 +106,7 @@ then
     done
     exit 0
 fi
+
+COMMAND_ARGS=$(shift_n $SHIFT_ARGS $*)
 
 exec $(script_for $COMMAND)
