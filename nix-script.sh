@@ -35,46 +35,55 @@ script_for() {
 VERBOSE=0
 CONFIGFILE=~/.nixscriptsrc
 
-cmd="$1"; shift
+for cmd
+do
+    case $cmd in
+    "--list-commands" )
+        LIST_COMMANDS=1
+        shift;
+        ;;
 
-case $cmd in
-"--list-commands" )
-    LIST_COMMANDS=1
-    shift;
-    ;;
+    "-l" )
+        LIST_COMMANDS=1
+        shift;
+        ;;
 
-"-l" )
-    LIST_COMMANDS=1
-    shift;
-    ;;
+    "--config" )
+        CONFIGFILE=$1
+        shift
+        ;;
 
-"--config" )
-    CONFIGFILE=$1
-    shift
-    ;;
+    "-c" )
+        CONFIGFILE=$1
+        shift
+        ;;
 
-"-c" )
-    CONFIGFILE=$1
-    shift
-    ;;
+    "-v" )
+        export VERBOSE=1
+        shift;
+        ;;
 
-"-v" )
-    export VERBOSE=1
-    shift;
-    ;;
-
-"-h" )
-    usage()
-    exit 1
-    ;;
-
-* )
-    if [[ -n $(script_for $cmd) ]]
-    then
-        stderr "Unknown flag / command '$cmd'"
+    "-h" )
+        usage()
         exit 1
-    fi
-esac
+        ;;
+
+    * )
+        if [ ! -n $(script_for $cmd) ]
+        then
+            stderr "Unknown flag / command '$cmd'"
+            exit 1
+        else
+            if [ -z "$COMMAND" ]
+            then
+                COMMAND=$cmd
+            else
+                stderr "Found two commands, cannot execute two commands."
+                exit 1
+            fi
+        fi
+    esac
+done
 
 [[ ! -f $CONFIGFILE ]] && echo "No config file: '$CONFIGFILE'" && exit 1
 
