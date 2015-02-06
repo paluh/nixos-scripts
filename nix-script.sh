@@ -99,9 +99,6 @@ do
                 stdout "Found command: '$cmd'"
                 COMMAND=$cmd
                 shift_one_more
-            else
-                stderr "Found two commands, cannot execute two commands."
-                exit 1
             fi
         fi
     esac
