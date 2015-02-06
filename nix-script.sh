@@ -10,6 +10,20 @@
 # So the "diff-generations" script looks like a command for "nix-script"
 #
 
+usage() {
+    cat <<EOS >&2
+    $(basename $0) [options] <command> <commandoptions>
+
+    -l | --list-commands    List all available commands
+    -c | --config           Use alternative configuration (rc) file
+    -v                      Be verbose
+    -h                      Show this help and exit
+
+    (c) 2015 Matthias Beyer
+    GPLv2 licensed
+EOS
+}
+
 VERBOSE=0
 CONFIGFILE=~/.nixscriptsrc
 
@@ -39,6 +53,11 @@ case $cmd in
 "-v" )
     export VERBOSE=1
     shift;
+    ;;
+
+"-h" )
+    usage()
+    exit 1
     ;;
 esac
 
