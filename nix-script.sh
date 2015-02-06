@@ -42,6 +42,10 @@ shift_n() {
     echo $*
 }
 
+all_commands() {
+    find $(dirname ${BASH_SOURCE[0]}) -type f -name "nix-script-*.sh"
+}
+
 VERBOSE=0
 CONFIGFILE=~/.nixscriptsrc
 
