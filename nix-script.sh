@@ -116,6 +116,12 @@ then
     exit 0
 fi
 
+if [ -z "$COMMAND" ]
+then
+    stderr "No command given"
+    exit 0
+fi
+
 SCRIPT=$(script_for $COMMAND)
 
 if [ ! -f $SCRIPT ]
