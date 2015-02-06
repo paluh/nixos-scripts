@@ -46,6 +46,7 @@ all_commands() {
     find $(dirname ${BASH_SOURCE[0]}) -type f -name "nix-script-*.sh"
 }
 
+LIST_COMMANDS=0
 VERBOSE=0
 CONFIGFILE=~/.nixscriptsrc
 
@@ -107,7 +108,7 @@ else
     . $CONFIFILE
 fi
 
-if [[ $LIST_COMMNADS -eq 1 ]]
+if [ $LIST_COMMANDS -eq 1 ]
 then
     for cmd in $(all_commands)
     do
