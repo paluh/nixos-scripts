@@ -28,6 +28,10 @@ stderr() {
     echo "[$(basename $0)]: $*" >&2
 }
 
+script_for() {
+    echo "$(dirname ${BASH_SOURCE[0]})/nix-script-${1}.sh"
+}
+
 VERBOSE=0
 CONFIGFILE=~/.nixscriptsrc
 
