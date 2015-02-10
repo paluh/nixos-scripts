@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [[ -z "$1" || -z "$2" ]]
+then
+    echo "Not enough arguments, expecting two numbers (generations)"
+    exit 1
+fi
+
 LOC=/nix/var/nix/profiles/per-user/$USER
 TYPE=profile
 
