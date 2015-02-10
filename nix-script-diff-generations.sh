@@ -10,4 +10,5 @@ versB=$(mktemp)
 nix-store -qR $LOC/$TYPE-$2-link > $versB
 
 diff -u $versA $versB | grep "nix/store" | sed 's:/nix/store/: :' | \
-    sed -r 's:(.) ([a-z0-9]*)-(.*):\1 \3:' | sort -k 1.44
+    grep -E "^(\+|\-).*" | sed -r 's:(.) ([a-z0-9]*)-(.*):\1 \3:' | \
+        sort -k 1.44
