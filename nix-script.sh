@@ -147,4 +147,4 @@ stdout "Parsing args for '$COMMAND'"
 SCRIPT_ARGS=$(shift_n $SHIFT_ARGS $*)
 
 stdout "Calling: '$COMMAND $SCRIPT_ARGS'"
-exec $SCRIPT $SCRIPT_ARGS
+exec bash $SCRIPT $SCRIPT_ARGS
