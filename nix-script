@@ -106,7 +106,7 @@ done
 
 if [ ! -f $CONFIGFILE ]
 then
-    stderr "No config file: '$CONFIGFILE', won't override defaults"
+    stdout "No config file: '$CONFIGFILE', won't override defaults"
 else
     stdout "Source config: '$CONFIGFILE'"
     . $CONFIFILE
