@@ -117,7 +117,7 @@ then
     stdout "Listing commands"
     for cmd in $(all_commands)
     do
-        echo "$cmd"
+        echo "$cmd" | sed 's,^\.\/nix-script-,,' | sed 's,\.sh$,,'
     done
     exit 0
 fi
