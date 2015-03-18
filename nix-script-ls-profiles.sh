@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 profiledir=/nix/var/nix/profiles
 
