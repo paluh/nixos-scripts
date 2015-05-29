@@ -25,15 +25,6 @@ VERBOSE=0
 
 source $(dirname ${BASH_SOURCE[0]})/nix-utils.sh
 
-#
-# Get the name of the script file for the command passed as argument
-#
-# Does not check whether the file exists.
-#
-script_for() {
-    echo "$(dirname ${BASH_SOURCE[0]})/nix-script-${1}.sh"
-}
-
 SHIFT_ARGS=0
 
 #
@@ -53,13 +44,6 @@ shift_one_more() {
 shift_n() {
     for n in `seq 0 $1`; do shift; done
     echo $*
-}
-
-#
-# List all available commands
-#
-all_commands() {
-    find $(dirname ${BASH_SOURCE[0]}) -type f -name "nix-script-*.sh"
 }
 
 #
