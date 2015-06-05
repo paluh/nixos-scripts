@@ -12,3 +12,20 @@ stdout() {
     [ $VERBOSE -eq 1 ] && echo -e "${Green}[$(basename $0)]:${Color_Off} $*"
 }
 
+scriptname_to_command() {
+        echo "$1" | sed 's,^\.\/nix-script-,,' | sed 's,\.sh$,,'
+}
+
+help_synopsis() {
+    SCRIPT=$(scriptname_to_command $1); shift
+    echo "usage: nix-script $SCRIPT $*"
+}
+
+help_end() {
+    echo -e "\tAdding '-v' before the '$1' command turns on verbosity"
+    echo -e ""
+    echo -e "\tReleased under terms of GPLv2"
+    echo -e "\t(c) 2015 Matthias Beyer"
+    echo ""
+}
+
