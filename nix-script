@@ -100,6 +100,7 @@ do
                 COMMAND=$cmd
                 shift_one_more
             fi
+            break
         fi
     esac
 done
