@@ -15,7 +15,6 @@ usage() {
     $(basename $0) [options] <command> <commandoptions>
 
     -l | --list-commands    List all available commands
-    -c | --config           Use alternative configuration (rc) file
     -v                      Be verbose
     -h                      Show this help and exit
 
@@ -26,15 +25,8 @@ EOS
 
 LIST_COMMANDS=0
 VERBOSE=0
-CONFIGFILE=~/.nixscriptsrc
 
-stderr() {
-    echo "[$(basename $0)]: $*" >&2
-}
-
-stdout() {
-    [ $VERBOSE -eq 1 ] && echo "[$(basename $0)]: $*"
-}
+source $(dirname ${BASH_SOURCE[0]})/nix-utils.sh
 
 script_for() {
     echo "$(dirname ${BASH_SOURCE[0]})/nix-script-${1}.sh"
@@ -67,16 +59,6 @@ do
         shift_one_more
         ;;
 
-    "--config" )
-        CONFIGFILE=$1
-        shift_one_more
-        ;;
-
-    "-c" )
-        CONFIGFILE=$1
-        shift_one_more
-        ;;
-
     "-v" )
         export VERBOSE=1
         stdout "Verbose now"
@@ -98,19 +80,11 @@ do
             then
                 stdout "Found command: '$cmd'"
                 COMMAND=$cmd
-                shift_one_more
             fi
+            break
         fi
     esac
 done
-
-if [ ! -f $CONFIGFILE ]
-then
-    stdout "No config file: '$CONFIGFILE', won't override defaults"
-else
-    stdout "Source config: '$CONFIGFILE'"
-    . $CONFIFILE
-fi
 
 if [ $LIST_COMMANDS -eq 1 ]
 then
