@@ -92,7 +92,7 @@ then
     stdout "Listing commands"
     for cmd in $(all_commands)
     do
-        echo "$cmd" | sed 's,^\.\/nix-script-,,' | sed 's,\.sh$,,'
+        echo $(scriptname_to_command $cmd)
     done
     exit 0
 fi
