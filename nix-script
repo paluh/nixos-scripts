@@ -15,7 +15,6 @@ usage() {
     $(basename $0) [options] <command> <commandoptions>
 
     -l | --list-commands    List all available commands
-    -c | --config           Use alternative configuration (rc) file
     -v                      Be verbose
     -h                      Show this help and exit
 
@@ -26,7 +25,6 @@ EOS
 
 LIST_COMMANDS=0
 VERBOSE=0
-CONFIGFILE=~/.nixscriptsrc
 
 stderr() {
     echo "[$(basename $0)]: $*" >&2
@@ -67,16 +65,6 @@ do
         shift_one_more
         ;;
 
-    "--config" )
-        CONFIGFILE=$1
-        shift_one_more
-        ;;
-
-    "-c" )
-        CONFIGFILE=$1
-        shift_one_more
-        ;;
-
     "-v" )
         export VERBOSE=1
         stdout "Verbose now"
@@ -104,14 +92,6 @@ do
         fi
     esac
 done
-
-if [ ! -f $CONFIGFILE ]
-then
-    stdout "No config file: '$CONFIGFILE', won't override defaults"
-else
-    stdout "Source config: '$CONFIGFILE'"
-    . $CONFIFILE
-fi
 
 if [ $LIST_COMMANDS -eq 1 ]
 then
