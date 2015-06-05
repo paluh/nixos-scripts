@@ -86,7 +86,6 @@ do
             then
                 stdout "Found command: '$cmd'"
                 COMMAND=$cmd
-                shift_one_more
             fi
             break
         fi
