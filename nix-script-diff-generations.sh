@@ -83,6 +83,12 @@ stdout "from directory  : $DIR_A"
 stdout "Generation B    : $GEN_B"
 stdout "from directory  : $DIR_B"
 
+if [[ -z "$GEN_A" || -z "$GEN_B" ]]
+then
+    stderr "No generations"
+    exit 1
+fi
+
 if [[ ! -e $DIR_A ]]
 then
     stderr "Generation $GEN_A does not exist."
