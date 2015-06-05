@@ -19,7 +19,6 @@ SYSTEM=0
 USER=0
 SYSPROF=0
 NUMBERS=0
-VERBOSE=0
 
 for arg
 do
@@ -50,16 +49,8 @@ do
             SYSPROF=1
             ;;
 
-        "--verbose" )
-            VERBOSE=1
-            ;;
-
         "-n" )
             NUMBERS=1
-            ;;
-
-        "-v" )
-            VERBOSE=1
             ;;
 
         "-h" )
