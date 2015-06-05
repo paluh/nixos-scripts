@@ -11,6 +11,7 @@ usage() {
         -n a..b  Diff these generations
         -h       Show this help and exit
 
+$(help_end)
 EOS
 }
 

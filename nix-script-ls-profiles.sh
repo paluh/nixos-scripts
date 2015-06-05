@@ -13,6 +13,8 @@ usage() {
     --system-profiles | -p  | Show other system profiles
     -n                      | Show only profile numbers
     -h                      | Show this help and exit
+
+$(help_end)
 EOS
 }
 
