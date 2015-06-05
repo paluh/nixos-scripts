@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+source $(dirname ${BASH_SOURCE[0]})/nix-utils.sh
+
 profiledir=/nix/var/nix/profiles
 
 usage() {

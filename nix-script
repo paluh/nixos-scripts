@@ -26,13 +26,7 @@ EOS
 LIST_COMMANDS=0
 VERBOSE=0
 
-stderr() {
-    echo "[$(basename $0)]: $*" >&2
-}
-
-stdout() {
-    [ $VERBOSE -eq 1 ] && echo "[$(basename $0)]: $*"
-}
+source $(dirname ${BASH_SOURCE[0]})/nix-utils.sh
 
 script_for() {
     echo "$(dirname ${BASH_SOURCE[0]})/nix-script-${1}.sh"
