@@ -6,13 +6,12 @@ profiledir=/nix/var/nix/profiles
 
 usage() {
     cat <<EOS >&2
-    ls-profiles <--system|-s> <--user|-u> <--system-profiles|-p> <-v> <-h>
+    $(help_synopsis "${BASH_SOURCE[0]}" "[--system | -s] [--user | -u] [-n] [-h]")
 
     --system | -s           | Show system profiles
     --user | -u             | Show user profiles
     --system-profiles | -p  | Show other system profiles
     -n                      | Show only profile numbers
-    -v                      | Be verbose
     -h                      | Show this help and exit
 EOS
 }

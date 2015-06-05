@@ -4,12 +4,11 @@ source $(dirname ${BASH_SOURCE[0]})/nix-utils.sh
 
 usage() {
     cat <<EOS
-    diff-generations [options] <generation a> <generation b>
+    $(help_synopsis "${BASH_SOURCE[0]}" "[-s | -u] [-n <a..b>] [-h]")
 
         -s       Use system generation for diffing
         -u       Use system generation for diffing
         -n a..b  Diff these generations
-        -v       Be verbose
         -h       Show this help and exit
 
 EOS
