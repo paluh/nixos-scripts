@@ -151,3 +151,13 @@ caller_util_script_for() {
     echo "$(dirname ${BASH_SOURCE[0]})/${1}-${2}.sh"
 }
 
+# Argument 1: Caller script name
+# Argzment 2: Command name
+caller_util_get_script() {
+    local SCRIPT=$(caller_util_script_for $1 $2)
+
+    [[ ! -f $SCRIPT ]] && stderr "Not available: $COMMAND -> $SCRIPT" && exit 1
+    [[ ! -x $SCRIPT ]] && stderr "Not executeable: $SCRIPT" && exit 1
+
+    echo "$SCRIPT"
+}
