@@ -9,7 +9,7 @@ stderr() {
 }
 
 stdout() {
-    [ $VERBOSE -eq 1 ] && echo -e "${Green}[$(basename $0)]:${Color_Off} $*"
+    [[ $VERBOSE -eq 1 ]] && echo -e "${Green}[$(basename $0)]:${Color_Off} $*"
 }
 
 scriptname_to_command() {
