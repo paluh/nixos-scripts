@@ -29,6 +29,11 @@ help_end() {
     echo ""
 }
 
+explain() {
+    stdout "$*"
+    $*
+}
+
 grep_generation() {
     $* | grep current | cut -d " " -f 2
 }
