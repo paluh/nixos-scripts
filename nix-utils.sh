@@ -29,3 +29,15 @@ help_end() {
     echo ""
 }
 
+grep_generation() {
+    $* | grep current | cut -d " " -f 2
+}
+
+current_system_generation() {
+    grep_generation "sudo nix-env -p /nix/var/nix/profiles/system --list-generations"
+}
+
+current_user_generation() {
+    grep_generation "nix-env --list-generations"
+}
+
