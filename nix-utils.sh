@@ -131,3 +131,9 @@ __git_current_branch() {
     branch_name=${branch_name##refs/heads/}
     ([[ -z "$branch_name" ]] && git rev-parse HEAD) || echo $branch_name
 }
+
+# Argument 1: Caller script name, format: "nix-script"
+caller_util_all_commands() {
+    find $(dirname ${BASH_SOURCE[0]}) -type f -name "${1}-*.sh"
+}
+
