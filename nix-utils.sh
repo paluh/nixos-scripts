@@ -145,3 +145,9 @@ caller_util_list_subcommands_for() {
     done
 }
 
+# Argument 1: Caller script name
+# Argzment 2: Command name
+caller_util_script_for() {
+    echo "$(dirname ${BASH_SOURCE[0]})/${1}-${2}.sh"
+}
+
