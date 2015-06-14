@@ -95,6 +95,9 @@ then
     LASTGEN=$(current_system_generation)
     sudo -k
 
+    stdout "sudo -k succeeded"
+    stdout "Last generation was: $LASTGEN"
+
     if [[ -z "$TAG_NAME" ]]
     then
         if [[ -z "$HOSTNAME" ]]; then TAG_NAME="nixos-$LASTGEN-$COMMAND"
