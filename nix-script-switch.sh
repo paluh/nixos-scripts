@@ -17,6 +17,7 @@ usage() {
         -t <tagname>    Custom tag name
         -p <pkgs>       Generate the switch tag in the nixpkgs at <pkgs> as well.
         -f <tag-flags>  Flags for git-tag (see 'git tag --help')
+        -b              Do not call nixos-rebuild at all.
         -h              Show this help and exit
 
         This command helps you rebuilding your system and keeping track
@@ -53,8 +54,9 @@ TAG_NAME=
 HOSTNAME="$(hostname)"
 NIXPKGS=""
 TAG_FLAGS=""
+DONT_BUILD=
 
-while getopts "c:w:t:np:f:h" OPTION
+while getopts "c:w:t:nbp:f:h" OPTION
 do
     case $OPTION in
         c)
@@ -83,6 +85,11 @@ do
         f)
             TAG_FLAGS=$OPTARG
             dbg "TAG_FLAGS = $TAG_FLAGS"
+            ;;
+
+        b)
+            DONT_BUILD=1
+            dbg "DONT_BUILD = $DONT_BUILD"
             ;;
 
         h)
@@ -121,8 +128,14 @@ dbg "ARGS = $ARGS"
 [[ ! -d "$WD" ]]        && stderr "No directory: $WD" && exit 1
 [[ -z "$COMMAND" ]]     && COMMAND="switch"
 
-explain sudo nixos-rebuild $COMMAND $ARGS
-REBUILD_EXIT=$?
+if [[ -z "$DONT_BUILD" ]]
+then
+    explain sudo nixos-rebuild $COMMAND $ARGS
+    REBUILD_EXIT=$?
+else
+    stdout "Do not call nixos-rebuild"
+    REBUILD_EXIT=0
+fi
 
 if [[ $REBUILD_EXIT -eq 0 ]]
 then
