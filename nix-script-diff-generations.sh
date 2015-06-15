@@ -103,13 +103,13 @@ fi
 
 versA=$(mktemp)
 stdout "TMP file '$versA' created"
-nix-store -qR $DIR_A > $versA
+nix-store -qR $DIR_A | sort -t'-' -k 2 > $versA
 stdout "Generation packages written for $GEN_A"
 
 
 versB=$(mktemp)
 stdout "TMP file '$versB' created"
-nix-store -qR $DIR_B > $versB
+nix-store -qR $DIR_B | sort -t'-' -k 2 > $versB
 stdout "Generation packages written for $GEN_B"
 
 stdout "Diffing now..."
