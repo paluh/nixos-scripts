@@ -114,9 +114,15 @@ stdout "Generation packages written for $GEN_B"
 
 stdout "Diffing now..."
 
-diff -u $versA $versB | grep "nix/store" | sed 's:/nix/store/: :' | \
-    grep -E "^(\+|\-).*" | sed -r 's:(.) ([a-z0-9]*)-(.*):\1 \3:' | \
-        sort -k 2 -k 1,1r
+diff -u $versA $versB | \
+    # Select only lines that differ.
+    # (no context, no file name, no line number, etc.)
+    grep '^[+-]/nix/store' | \
+    # Remove the "/nix/store/<hash>" garbage.
+    # Add a space instead, to separate the [+-] from the name.
+    sed 's:/nix/store/[^-]*-: :' | \
+    # sort by name, then prefer '+' over '-'.
+    sort -k 2 -k 1,1r
 
 stdout "Removing tmp directories"
 
