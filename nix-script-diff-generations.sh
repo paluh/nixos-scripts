@@ -116,7 +116,7 @@ stdout "Diffing now..."
 
 diff -u $versA $versB | grep "nix/store" | sed 's:/nix/store/: :' | \
     grep -E "^(\+|\-).*" | sed -r 's:(.) ([a-z0-9]*)-(.*):\1 \3:' | \
-        sort -k 1.44
+        sort -k 2 -k 1,1r
 
 stdout "Removing tmp directories"
 
