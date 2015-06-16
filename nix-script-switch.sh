@@ -59,7 +59,7 @@ do
     esac
 done
 
-ARGS=$(echo $* | sed -r 's/(.*)\-\-(.*)/\2/')
+ARGS=$(echo $* | sed -r 's/(.*)(\-\-(.*)|$)/\2/')
 stdout "ARGS = $ARGS"
 
 if [[ -z "$WD" ]]
