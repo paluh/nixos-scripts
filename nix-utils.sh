@@ -55,6 +55,14 @@ continue_question() {
 	[[ "${answer}" =~ ^[Yy]$ ]] || return 1
 }
 
+ask_execute() {
+    q="$1"; shift
+	local answer
+	echo -ne "${Yellow}$q${Color_Off} [Yn]? "
+	read answer; echo
+	[[ ! "${answer}" =~ ^[Nn]$ ]] && eval $*
+}
+
 __git() {
     DIR=$1; shift
     explain git --git-dir="$DIR/.git" --work-tree="$DIR" $*
