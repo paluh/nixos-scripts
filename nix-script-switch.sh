@@ -99,7 +99,7 @@ then
         TAG_NAME="nixos-$LASTGEN-$COMMAND"
     fi
 
-    explain git --git-dir="$WD/.git" --work-tree="$WD" $GIT_COMMAND "'$TAG_NAME'"
+    explain git --git-dir="$WD/.git" --work-tree="$WD" $GIT_COMMAND "$TAG_NAME"
 
 else
     stderr "Switching failed. Won't executing any further commands."
