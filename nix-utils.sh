@@ -55,3 +55,7 @@ continue_question() {
 	[[ "${answer}" =~ ^[Yy]$ ]] || return 1
 }
 
+__git() {
+    DIR=$1; shift
+    explain git --git-dir="$DIR/.git" --work-tree="$DIR" $*
+}
