@@ -2,6 +2,7 @@
 
 Color_Off='\e[0m'
 Red='\e[0;31m'
+Yellow='\e[0;33m'
 Green='\e[0;32m'
 
 stderr() {
@@ -44,5 +45,13 @@ current_system_generation() {
 
 current_user_generation() {
     grep_generation "nix-env --list-generations"
+}
+
+continue_question() {
+	local answer
+	echo -ne "${Yellow}$1 [yN]?:${Color_Off} " >&2
+	read answer
+		echo ""
+	[[ "${answer}" =~ ^[Yy]$ ]] || return 1
 }
 
