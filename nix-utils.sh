@@ -141,7 +141,7 @@ caller_util_list_subcommands_for() {
     for cmd in $(caller_util_all_commands $1)
     do
         scriptname_to_command "$cmd" "$1"
-    done
+    done | sort
 }
 
 # Argument 1: Caller script name
