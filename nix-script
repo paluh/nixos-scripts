@@ -139,10 +139,7 @@ dbg "RC_NIXPKGS = '$RC_NIXPKGS'"
 if [ $LIST_COMMANDS -eq 1 ]
 then
     dbg "Listing commands"
-    for cmd in $(all_commands)
-    do
-        echo $(scriptname_to_command $cmd "nix-script")
-    done
+    caller_util_list_subcommands_for "nix-script"
     exit 0
 fi
 
