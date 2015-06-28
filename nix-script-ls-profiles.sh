@@ -66,11 +66,7 @@ do
     esac
 done
 
-if (( $SYSTEM == 0 && $USER == 0 && $SYSPROF == 0 ))
-then
-    usage
-    exit 1
-fi
+(( $SYSTEM == 0 && $USER == 0 && $SYSPROF == 0 )) && usage && exit 1
 
 numberfilter() {
     pref="$1"
@@ -93,16 +89,13 @@ list() {
     ls "$profiledir/$1" | grep -E "$2" | numberfilter "$3"
 }
 
-if (( $SYSTEM == 1 ))
-then
-    list "" "^system-.*-link" "system/"
-fi
+(( $SYSTEM == 1 )) && list "" "^system-.*-link" "system/"
 
 if (( $USER == 1 ))
 then
-    for username in $USER_NAMES
+    for u in $USER_NAMES;
     do
-        list "per-user/$username" "^profile-.*-link" "user/$username/"
+        list "per-user/$u" "^profile-.*-link" "user/$u/"
     done
 fi
 
