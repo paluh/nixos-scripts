@@ -92,8 +92,7 @@ then
     stdout "Listing commands"
     for cmd in $(all_commands)
     do
-        echo $(scriptname_to_command $cmd | \
-            sed -r "s,$(dirname ${BASH_SOURCE[0]})/nix-script-,,")
+        echo $(scriptname_to_command $cmd)
     done
     exit 0
 fi

@@ -13,7 +13,8 @@ stdout() {
 }
 
 scriptname_to_command() {
-        echo "$1" | sed 's,^\.\/nix-script-,,' | sed 's,\.sh$,,'
+        echo "$1" | sed 's,^\.\/nix-script-,,' | sed 's,\.sh$,,' | \
+            sed -r "s,$(dirname ${BASH_SOURCE[0]})/nix-script-,,"
 }
 
 help_synopsis() {
