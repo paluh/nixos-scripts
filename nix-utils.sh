@@ -31,7 +31,8 @@ stdout() {
 # Get the command name from a script path
 #
 scriptname_to_command() {
-    echo "$1" | sed -r "s,$(dirname ${BASH_SOURCE[0]})/$2-(.*)\.sh$,\1,"
+    callee=$([ -z "$2" ] && echo "nix-script" || echo "$2")
+    echo "$1" | sed -r "s,$(dirname ${BASH_SOURCE[0]})/$callee-(.*)\.sh$,\1,"
 }
 
 #
