@@ -103,20 +103,26 @@ fi
 
 versA=$(mktemp)
 stdout "TMP file '$versA' created"
-nix-store -qR $DIR_A > $versA
+nix-store -qR $DIR_A | sort -t'-' -k 2 > $versA
 stdout "Generation packages written for $GEN_A"
 
 
 versB=$(mktemp)
 stdout "TMP file '$versB' created"
-nix-store -qR $DIR_B > $versB
+nix-store -qR $DIR_B | sort -t'-' -k 2 > $versB
 stdout "Generation packages written for $GEN_B"
 
 stdout "Diffing now..."
 
-diff -u $versA $versB | grep "nix/store" | sed 's:/nix/store/: :' | \
-    grep -E "^(\+|\-).*" | sed -r 's:(.) ([a-z0-9]*)-(.*):\1 \3:' | \
-        sort -k 1.44
+diff -u $versA $versB | \
+    # Select only lines that differ.
+    # (no context, no file name, no line number, etc.)
+    grep '^[+-]/nix/store' | \
+    # Remove the "/nix/store/<hash>" garbage.
+    # Add a space instead, to separate the [+-] from the name.
+    sed 's:/nix/store/[^-]*-: :' | \
+    # sort by name, then prefer '+' over '-'.
+    sort -k 2 -k 1,1r
 
 stdout "Removing tmp directories"
 
