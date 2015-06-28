@@ -141,7 +141,7 @@ then
     dbg "Listing commands"
     for cmd in $(all_commands)
     do
-        echo $(scriptname_to_command $cmd)
+        echo $(scriptname_to_command $cmd "nix-script")
     done
     exit 0
 fi
