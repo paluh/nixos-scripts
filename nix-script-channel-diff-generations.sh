@@ -4,7 +4,7 @@ source $(dirname ${BASH_SOURCE[0]})/nix-utils.sh
 
 usage() {
     cat <<EOS >&2
-    $(help_synopsis "${BASH_SOURCE[0]}" "[-g <command>] [-w <path>] [-n <generations>] [-h]")
+    $(help_synopsis "channel" "diff-generations [-g <command>] [-w <path>] [-n <generations>] [-h]")
 
     -g <command>        | Use this command instead of 'diff --name-only' (currently no support for multi-word args)
     -w <path>           | Path to working-copy of nixpkgs git repo, default: $RC_NIXPKGS

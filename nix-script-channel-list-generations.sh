@@ -7,7 +7,7 @@ Red='\e[0;31m'
 
 usage() {
     cat <<EOS >&2
-    $(help_synopsis "${BASH_SOURCE[0]}" "[-h]")
+    $(help_synopsis "channel" "list-generations [-h]")
 
     -h      | Show this help and exit
 

@@ -4,7 +4,7 @@ source $(dirname ${BASH_SOURCE[0]})/nix-utils.sh
 
 usage() {
     cat <<EOS
-    $(help_synopsis "${BASH_SOURCE[0]}" "[-h] [-g <n>]")
+    $(help_synopsis "channel" "checkout-generation [-h] [-g <n>]")
 
         -g <n>  Generation to checkout
         -h      Show this help and exit
