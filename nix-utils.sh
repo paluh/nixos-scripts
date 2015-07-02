@@ -2,6 +2,7 @@
 
 Color_Off='\e[0m'
 Red='\e[0;31m'
+Yellow='\e[0;33m'
 Green='\e[0;32m'
 
 stderr() {
@@ -47,3 +48,31 @@ current_user_generation() {
     grep_generation "nix-env --list-generations"
 }
 
+continue_question() {
+	local answer
+	echo -ne "${Yellow}$1 [yN]?:${Color_Off} " >&2
+	read answer
+		echo ""
+	[[ "${answer}" =~ ^[Yy]$ ]] || return 1
+}
+
+ask_execute() {
+    q="$1"; shift
+	local answer
+	echo -ne "${Yellow}$q${Color_Off} [Yn]? "
+	read answer; echo
+	[[ ! "${answer}" =~ ^[Nn]$ ]] && eval $*
+}
+
+__git() {
+    DIR=$1; shift
+    explain git --git-dir="$DIR/.git" --work-tree="$DIR" $*
+}
+
+# Gets the current branch name or the hash of the current rev if there is no
+# branch
+__git_current_branch() {
+    REV=$(git --git-dir="$1/.git" --work-tree="$1" rev-parse --abbrev-ref HEAD)
+    ([[ "$REV" -eq "HEAD" ]] && \
+        git --git-dir="$1/.git" --work-tree="$1" rev-parse HEAD) || echo "$REV"
+}
