@@ -90,8 +90,7 @@ REBUILD_EXIT=$?
 
 if [[ $REBUILD_EXIT -eq 0 ]]
 then
-    LASTGEN=$(sudo nix-env -p /nix/var/nix/profiles/system --list-generations |\
-        grep current | cut -d " " -f 2)
+    LASTGEN=$(current_system_generation)
     sudo -k
 
     if [[ -z "$TAG_NAME" ]]
