@@ -37,7 +37,7 @@ explain() {
 }
 
 grep_generation() {
-    $* | grep current | cut -d " " -f 2
+    $* | grep current | sed -r 's,\s*([0-9]*)(.*),\1,'
 }
 
 current_system_generation() {
