@@ -14,6 +14,7 @@ usage() {
         -c <command>    Command for nixos-rebuild. See 'man nixos-rebuild'
         -g <git cmd>    Alternative git commit, defaults to 'tag -a'
         -w <path>       Path to your configuration git directory
+        -n              Include hostname in tag name
         -h              Show this help and exit
 
         Everything after a double dash (--) will be passed to nixos-rebuild as
@@ -30,8 +31,9 @@ ARGS=
 WD=
 TAG_NAME=
 GIT_COMMAND=
+HOSTNAME=""
 
-while getopts "c:w:t:h" OPTION
+while getopts "c:w:t:nh" OPTION
 do
     case $OPTION in
         c)
@@ -50,6 +52,11 @@ do
         g)
             GIT_COMMAND=$OPTARG
             stdout "GIT_COMMAND = $GIT_COMMAND"
+            ;;
+
+        n)
+            HOSTNAME=$(hostname)
+            stdout "HOSTNAME = $HOSTNAME"
             ;;
 
         h)
@@ -95,7 +102,12 @@ then
 
     if [[ -z "$TAG_NAME" ]]
     then
-        TAG_NAME="nixos-$LASTGEN-$COMMAND"
+        if [[ -z "$HOSTNAME" ]]
+        then
+            TAG_NAME="nixos-$LASTGEN-$COMMAND"
+        else
+            TAG_NAME="nixos-$HOSTNAME-$LASTGEN-$COMMAND"
+        fi
     fi
 
     explain git --git-dir="$WD/.git" --work-tree="$WD" $GIT_COMMAND "$TAG_NAME"
