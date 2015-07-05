@@ -97,26 +97,13 @@ then
     exit 0
 fi
 
-if [ -z "$COMMAND" ]
-then
-    stderr "No command given"
-    exit 0
-fi
+[ -z "$COMMAND" ] && stderr "No command given" && exit 0
 
 stdout "Searching for script for '$COMMAND'"
 SCRIPT=$(script_for $COMMAND)
 
-if [ ! -f $SCRIPT ]
-then
-    stderr "Not available: $COMMAND -> $SCRIPT"
-    exit 1
-fi
-
-if [[ ! -x $SCRIPT ]]
-then
-    stderr "Not executeable: $SCRIPT"
-    exit 1
-fi
+[ ! -f $SCRIPT ]   && stderr "Not available: $COMMAND -> $SCRIPT" && exit 1
+[[ ! -x $SCRIPT ]] && stderr "Not executeable: $SCRIPT"           && exit 1
 
 stdout "Parsing args for '$COMMAND'"
 SCRIPT_ARGS=$(shift_n $SHIFT_ARGS $*)

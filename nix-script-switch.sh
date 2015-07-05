@@ -69,28 +69,13 @@ done
 ARGS=$(echo $* | sed -r 's/(.*)(\-\-(.*)|$)/\2/')
 stdout "ARGS = $ARGS"
 
-if [[ -z "$WD" ]]
-then
-    stderr "No configuration git directory."
-    stderr "Won't do anything"
-    exit 1
-fi
+[[ -z "$WD" ]] && \
+    stderr "No configuration git directory." && \
+    stderr "Won't do anything" && exit 1
 
-if [[ ! -d "$WD" ]]
-then
-    stderr "No directory: $WD"
-    exit 1
-fi
-
-if [[ -z "$COMMAND" ]]
-then
-    COMMAND="switch"
-fi
-
-if [[ -z "$GIT_COMMAND" ]]
-then
-    GIT_COMMAND="tag -a"
-fi
+[[ ! -d "$WD" ]]        && stderr "No directory: $WD" && exit 1
+[[ -z "$COMMAND" ]]     && COMMAND="switch"
+[[ -z "$GIT_COMMAND" ]] && GIT_COMMAND="tag -a"
 
 explain sudo nixos-rebuild $COMMAND $ARGS
 REBUILD_EXIT=$?
@@ -102,11 +87,8 @@ then
 
     if [[ -z "$TAG_NAME" ]]
     then
-        if [[ -z "$HOSTNAME" ]]
-        then
-            TAG_NAME="nixos-$LASTGEN-$COMMAND"
-        else
-            TAG_NAME="nixos-$HOSTNAME-$LASTGEN-$COMMAND"
+        if [[ -z "$HOSTNAME" ]]; then TAG_NAME="nixos-$LASTGEN-$COMMAND"
+        else TAG_NAME="nixos-$HOSTNAME-$LASTGEN-$COMMAND"
         fi
     fi
 

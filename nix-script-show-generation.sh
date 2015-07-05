@@ -38,12 +38,7 @@ do
     esac
 done
 
-if [[ $SYSTEM -eq 1 ]]
-then
-    current_system_generation
-else
-    current_user_generation
-fi
+([[ $SYSTEM -eq 1 ]] && current_system_generation) || current_user_generation
 
 stdout "Ready"
 

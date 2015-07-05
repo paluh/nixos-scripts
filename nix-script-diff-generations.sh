@@ -45,12 +45,8 @@ do
             stdout "Parsing generations: GEN_A: $GEN_A"
             stdout "Parsing generations: GEN_B: $GEN_B"
 
-            if [[ -z "$GEN_A" || -z "$GEN_B" ]]
-            then
-                stderr "Parsing error for '$OPTARG'"
-                usage
-                exit 1
-            fi
+            [[ -z "$GEN_A" || -z "$GEN_B" ]] && \
+                stderr "Parsing error for '$OPTARG'" && usage && exit 1
             ;;
 
         h)
@@ -61,15 +57,8 @@ do
 done
 
 gen_path() {
-    if [[ $__SYSTEM -eq 1 ]]
-    then
-        echo "/nix/var/nix/profiles/system-${1}-link"
-    fi
-
-    if [[ $__USER -eq 1 ]]
-    then
-        echo "/nix/var/nix/profiles/per-user/$USER/profile-${1}-link"
-    fi
+    [[ $__SYSTEM -eq 1 ]] && echo "/nix/var/nix/profiles/system-${1}-link"
+    [[ $__USER -eq 1 ]] && echo "/nix/var/nix/profiles/per-user/$USER/profile-${1}-link"
 }
 
 DIR_A=$(gen_path $GEN_A)
@@ -83,23 +72,9 @@ stdout "from directory  : $DIR_A"
 stdout "Generation B    : $GEN_B"
 stdout "from directory  : $DIR_B"
 
-if [[ -z "$GEN_A" || -z "$GEN_B" ]]
-then
-    stderr "No generations"
-    exit 1
-fi
-
-if [[ ! -e $DIR_A ]]
-then
-    stderr "Generation $GEN_A does not exist."
-    exit 1
-fi
-
-if [[ ! -e $DIR_B ]]
-then
-    stderr "Generation $GEN_B does not exist."
-    exit 1
-fi
+[[ -z "$GEN_A" || -z "$GEN_B" ]] && stderr "No generations"     && exit 1
+[[ ! -e $DIR_A ]] && stderr "Generation $GEN_A does not exist." && exit 1
+[[ ! -e $DIR_B ]] && stderr "Generation $GEN_B does not exist." && exit 1
 
 versA=$(mktemp)
 stdout "TMP file '$versA' created"
