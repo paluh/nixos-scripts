@@ -93,6 +93,12 @@ curl $URL > $TMP
 stdout "Parsing subject to branch name"
 PKG=$(cat $TMP | grep Subject | cut -d: -f 2 | sed -r 's,(\ *)(.*)(\ *),\2,')
 
+#translate subject line if necessary
+if [[ $(cat $TMP | grep "update from") ]]
+then
+    sed -i -r 's;Subject\:\ (.*)\:\ update from (.*) to (.*);Subject: \1\:\ \2 \ -> \3;' $TMP
+fi
+
 CURRENT_BRANCH=$(__git_current_branch "$NIXPKGS")
 __git "$NIXPKGS" checkout -b update-$PKG
 if [[ $? -ne 0 ]]
