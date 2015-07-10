@@ -17,10 +17,28 @@ usage() {
         -n              Include hostname in tag name
         -h              Show this help and exit
 
+        This command helps you rebuilding your system and keeping track
+        of the system generation in the git directory where your
+        configuration.nix lives. It generates a tag for each sucessfull
+        build of a system. So everytime you rebuild your system, this
+        script creates a tag for you, so you can revert your
+        configuration.nix to the generation state.
+
+        Example usage:
+
+            # To rebuild the system with "nixos-rebuild switch" (by -c
+            # switch), tag in /home/me/config and include the hostname
+            # in the tag as well (helpful if your configuration is
+            # shared between hosts).
+            # Verbosity is on here.
+            nix-script -v switch -c switch -w /home/me/config -n
+
         Everything after a double dash (--) will be passed to nixos-rebuild as
         additional parameters. For example:
 
             nix-script switch -c switch -- -I nixpkgs=/home/user/pkgs
+
+        can be used to use your local clone of the nixpkgs repository.
 
 $(help_end)
 EOS
