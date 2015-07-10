@@ -10,6 +10,15 @@ usage() {
         -u       Show user generation (default)
         -h       Show this help and exit
 
+    Show the number of the current generations. Defaults to user
+    profile, but system profile can be checked as well.
+
+    Example usage:
+
+        # To show the system generation which is current.
+        # With verbosity on.
+        nix-script -v show-generations -s
+
 $(help_end)
 EOS
 }
