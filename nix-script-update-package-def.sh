@@ -20,6 +20,31 @@ usage() {
         -g <path>   Path of nixpkgs clone (defaults to ./)
         -h          Show this help and exit
 
+        Helper for developers of Nix packages.
+
+        With this command you can
+            - Download package update diffs
+            - Create package update commits on a new branch
+            - Test build the updated package
+        and everything in one step. All you need is the URL of the
+        patch.
+
+        The script asks before building the package, so you can abort if
+        the script fails to find the package name.
+
+        You really should base the update branch on the commit your
+        current system is based on. This way you don't need to rebuild
+        the whole world.
+
+        Example usage:
+
+            # Create in the current directory (which should be a clone
+            # of the nixpkgs repo) a new branch for updateing ffmpeg,
+            # download the patch and apply it (commit message gets generated
+            # for you) and then test build it.
+            # Verbosity is on.
+            nix-script -v update-package-def -b -u http://monitor.nixos.org/patch?p=ffmpeg-full&v=2.7.1&m=Matthias+Beyer
+
 $(help_end)
 EOS
 }

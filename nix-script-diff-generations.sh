@@ -11,6 +11,15 @@ usage() {
         -n a..b  Diff these generations
         -h       Show this help and exit
 
+    Show the diff between two generations, so the installed and removed
+    packages.
+
+    Example usage:
+
+        # To show the diff of the system generation 123 to 145
+        # with verbosity on
+        nix-script -v diff-generations -s -n 123..145
+
 $(help_end)
 EOS
 }
