@@ -14,6 +14,20 @@ usage() {
     -n                      | Show only profile numbers
     -h                      | Show this help and exit
 
+    Show the generations which are currently available for either the
+    current user (-u | --user) or the current system (-s | --system)
+    profile.
+
+    Per default, this shows the link name, if you pass -n it only shows
+    the numbers.
+
+    Example usage:
+
+        # To show the profile generations for the system generation, but
+        # only the numbers.
+        # With verbosity on.
+        nix-script -v ls-profiles -s -n
+
 $(help_end)
 EOS
 }
