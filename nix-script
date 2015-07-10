@@ -87,7 +87,7 @@ then
     exit 0
 fi
 
-[ -z "$COMMAND" ] && stderr "No command given" && exit 0
+[ -z "$COMMAND" ] && stderr "No command given" && exit 1
 
 stdout "Searching for script for '$COMMAND'"
 SCRIPT=$(script_for $COMMAND)
