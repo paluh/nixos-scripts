@@ -2,14 +2,13 @@
 
 usage() {
     cat <<EOS >&2
-    $(basename $0) [options] <command> <commandoptions>
+    $(help_synopsis "${BASE_SOURCE[0]}" "[options] <command> <commandoptions>")
 
     -l | --list-commands    List all available commands
     -v                      Be verbose
     -h                      Show this help and exit
 
-    (c) 2015 Matthias Beyer
-    GPLv2 licensed
+$(help_end)
 EOS
 }
 
