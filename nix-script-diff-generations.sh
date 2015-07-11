@@ -65,6 +65,9 @@ do
     esac
 done
 
+#
+# Helper to generate a path for the profile we want to diff with
+#
 gen_path() {
     [[ $__SYSTEM -eq 1 ]] && echo "/nix/var/nix/profiles/system-${1}-link"
     [[ $__USER -eq 1 ]] && echo "/nix/var/nix/profiles/per-user/$USER/profile-${1}-link"
@@ -81,16 +84,24 @@ stdout "from directory  : $DIR_A"
 stdout "Generation B    : $GEN_B"
 stdout "from directory  : $DIR_B"
 
+#
+# Error checking whether the generations exist.
+#
 [[ -z "$GEN_A" || -z "$GEN_B" ]] && stderr "No generations"     && exit 1
 [[ ! -e $DIR_A ]] && stderr "Generation $GEN_A does not exist." && exit 1
 [[ ! -e $DIR_B ]] && stderr "Generation $GEN_B does not exist." && exit 1
 
+#
+# Querying the store for the stuff in a generation A
+#
 versA=$(mktemp)
 stdout "TMP file '$versA' created"
 nix-store -qR $DIR_A | sort -t'-' -k 2 > $versA
 stdout "Generation packages written for $GEN_A"
 
-
+#
+# Querying the store for the stuff in a generation B
+#
 versB=$(mktemp)
 stdout "TMP file '$versB' created"
 nix-store -qR $DIR_B | sort -t'-' -k 2 > $versB
