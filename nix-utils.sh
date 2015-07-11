@@ -72,7 +72,7 @@ __git() {
 # Gets the current branch name or the hash of the current rev if there is no
 # branch
 __git_current_branch() {
-    REV=$(git --git-dir="$1/.git" --work-tree="$1" rev-parse --abbrev-ref HEAD)
-    ([[ "$REV" -eq "HEAD" ]] && \
-        git --git-dir="$1/.git" --work-tree="$1" rev-parse HEAD) || echo "$REV"
+    branch_name=$(git symbolic-ref -q HEAD)
+    branch_name=${branch_name##refs/heads/}
+    ([[ -z "$branch_name" ]] && git rev-parse HEAD) || echo $branch_name
 }
