@@ -9,10 +9,9 @@ COMMAND="switch"
 usage() {
     cat <<EOS
 
-    $(help_synopsis "${BASH_SOURCE[0]}" "[-h] [-c <command>] [-g <git command>] -w <working directory> [-- args...]")
+    $(help_synopsis "${BASH_SOURCE[0]}" "[-h] [-c <command>] -w <working directory> [-- args...]")
 
         -c <command>    Command for nixos-rebuild. See 'man nixos-rebuild'
-        -g <git cmd>    Alternative git commit, defaults to 'tag -a'
         -w <path>       Path to your configuration git directory
         -n              Include hostname in tag name
         -h              Show this help and exit
@@ -48,7 +47,6 @@ COMMAND=
 ARGS=
 WD=
 TAG_NAME=
-GIT_COMMAND=
 HOSTNAME=""
 
 while getopts "c:w:t:nh" OPTION
@@ -65,11 +63,6 @@ do
         t)
             TAG_NAME=$OPTARG
             stdout "TAG_NAME = $TAG_NAME"
-            ;;
-
-        g)
-            GIT_COMMAND=$OPTARG
-            stdout "GIT_COMMAND = $GIT_COMMAND"
             ;;
 
         n)
@@ -93,7 +86,6 @@ stdout "ARGS = $ARGS"
 
 [[ ! -d "$WD" ]]        && stderr "No directory: $WD" && exit 1
 [[ -z "$COMMAND" ]]     && COMMAND="switch"
-[[ -z "$GIT_COMMAND" ]] && GIT_COMMAND="tag -a"
 
 explain sudo nixos-rebuild $COMMAND $ARGS
 REBUILD_EXIT=$?
@@ -110,7 +102,7 @@ then
         fi
     fi
 
-    __git "$WD" $GIT_COMMAND "$TAG_NAME"
+    __git "$WD" tag -a "$TAG_NAME"
 
 else
     stderr "Switching failed. Won't executing any further commands."
