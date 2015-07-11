@@ -110,7 +110,7 @@ then
         fi
     fi
 
-    __git $GIT_COMMAND "$TAG_NAME"
+    __git "$WD" $GIT_COMMAND "$TAG_NAME"
 
 else
     stderr "Switching failed. Won't executing any further commands."
