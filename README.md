@@ -33,22 +33,22 @@ nix-script diff-generations -s -n 114..115
 
 Execute "nixos-rebuild switch" and tags the current checked-out commit
 in "/home/myself/nixos-configuration/" on successfull build (including
-generation number). Default format for the tag name is
+generation number). Format for the tag name is
 
 ```plain
-  nixos-<generation>-<command>
+  nixos-[<hostname>-]<generation>-<command>
 ```
 
 Where <generation> is the generation which was just build
 and <command> is the command for nixos-rebuild, so either switch or test
 or... you get the point
 
-You can, of course, override the tag name (no way to insert the generation
-number by now) or the git command to use ('tag -a' be default).
-
 ```bash
 nix-script switch -c switch -w /home/myself/nixos-configuration/
 ```
+
+Add a `-n` to include the hostname into the tag name (usefull if you share
+your configuration over several hosts, as I do).
 
 You can also provide flags for 'nixos-rebuild' like so:
 (everything after the two dashes is appended to the nixos-rebuild command)
@@ -56,6 +56,8 @@ You can also provide flags for 'nixos-rebuild' like so:
 ```bash
 nix-script switch -c switch -w /home/myself/conf -- -I nixpkgs=/home/myself/pkgs
 ```
+
+Dive into the code or use the `-h` flags for getting more help.
 
 ## License
 

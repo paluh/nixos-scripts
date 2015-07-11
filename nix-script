@@ -17,24 +17,46 @@ VERBOSE=0
 
 source $(dirname ${BASH_SOURCE[0]})/nix-utils.sh
 
+#
+# Get the name of the script file for the command passed as argument
+#
+# Does not check whether the file exists.
+#
 script_for() {
     echo "$(dirname ${BASH_SOURCE[0]})/nix-script-${1}.sh"
 }
 
 SHIFT_ARGS=0
+
+#
+# Increase the SHIFT_ARGS variable
+#
 shift_one_more() {
     SHIFT_ARGS=$(( SHIFT_ARGS + 1 ))
 }
 
+#
+# Shift N times the arguments, so:
+#
+#  shift_n 5 a b c d e f
+#
+# will print "f"
+#
 shift_n() {
     for n in `seq 0 $1`; do shift; done
     echo $*
 }
 
+#
+# List all available commands
+#
 all_commands() {
     find $(dirname ${BASH_SOURCE[0]}) -type f -name "nix-script-*.sh"
 }
 
+#
+# Parse the arguments for this script
+#
 for cmd
 do
     case $cmd in
@@ -91,11 +113,17 @@ fi
 stdout "Searching for script for '$COMMAND'"
 SCRIPT=$(script_for $COMMAND)
 
+#
+# Error checking whether the script is available and executable.
+#
 [ ! -f $SCRIPT ]   && stderr "Not available: $COMMAND -> $SCRIPT" && exit 1
 [[ ! -x $SCRIPT ]] && stderr "Not executeable: $SCRIPT"           && exit 1
 
 stdout "Parsing args for '$COMMAND'"
 SCRIPT_ARGS=$(shift_n $SHIFT_ARGS $*)
 
+#
+# execute the script with its arguments
+#
 stdout "Calling: '$SCRIPT $SCRIPT_ARGS'"
 exec bash $SCRIPT $SCRIPT_ARGS
