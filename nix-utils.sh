@@ -13,6 +13,13 @@ stderr() {
 }
 
 #
+# Print debugging output on stderr, in green
+#
+dbg() {
+    echo -e "${Green}[DEBUG][$(basename $0)]: ${*}${Color_Off}" >&2
+}
+
+#
 # Print on stdout, if verbosity is enabled, prefix in green
 #
 stdout() {
