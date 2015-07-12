@@ -54,20 +54,20 @@ do
     case $OPTION in
         c)
             COMMAND=$OPTARG
-            stdout "COMMAND = $COMMAND"
+            dbg "COMMAND = $COMMAND"
             ;;
         w)
             WD=$OPTARG
-            stdout "WD = $WD"
+            dbg "WD = $WD"
             ;;
         t)
             TAG_NAME=$OPTARG
-            stdout "TAG_NAME = $TAG_NAME"
+            dbg "TAG_NAME = $TAG_NAME"
             ;;
 
         n)
             HOSTNAME=""
-            stdout "HOSTNAME disabled"
+            dbg "HOSTNAME disabled"
             ;;
 
         h)
@@ -78,7 +78,7 @@ do
 done
 
 ARGS=$(echo $* | sed -r 's/(.*)(\-\-(.*)|$)/\2/')
-stdout "ARGS = $ARGS"
+dbg "ARGS = $ARGS"
 
 [[ -z "$WD" ]] && \
     stderr "No configuration git directory." && \

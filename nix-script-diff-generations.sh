@@ -50,9 +50,9 @@ do
             GEN_A=$(echo $OPTARG | cut -d "." -f 1)
             GEN_B=$(echo $OPTARG | cut -d "." -f 3)
 
-            stdout "Parsing generations: $OPTARG"
-            stdout "Parsing generations: GEN_A: $GEN_A"
-            stdout "Parsing generations: GEN_B: $GEN_B"
+            dbg "Parsing generations: $OPTARG"
+            dbg "Parsing generations: GEN_A: $GEN_A"
+            dbg "Parsing generations: GEN_B: $GEN_B"
 
             [[ -z "$GEN_A" || -z "$GEN_B" ]] && \
                 stderr "Parsing error for '$OPTARG'" && usage && exit 1
@@ -76,13 +76,13 @@ gen_path() {
 DIR_A=$(gen_path $GEN_A)
 DIR_B=$(gen_path $GEN_B)
 
-stdout "VERBOSE         : $VERBOSE"
-stdout "SYSTEM          : $__SYSTEM"
-stdout "USER            : $__USER"
-stdout "Generation A    : $GEN_A"
-stdout "from directory  : $DIR_A"
-stdout "Generation B    : $GEN_B"
-stdout "from directory  : $DIR_B"
+dbg "VERBOSE         : $VERBOSE"
+dbg "SYSTEM          : $__SYSTEM"
+dbg "USER            : $__USER"
+dbg "Generation A    : $GEN_A"
+dbg "from directory  : $DIR_A"
+dbg "Generation B    : $GEN_B"
+dbg "from directory  : $DIR_B"
 
 #
 # Error checking whether the generations exist.
