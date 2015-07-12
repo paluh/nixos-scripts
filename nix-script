@@ -6,6 +6,7 @@ usage() {
 
     -l | --list-commands    List all available commands
     -v                      Be verbose
+    -d                      Debugging output (enables -v)
     -h                      Show this help and exit
 
 $(help_end)
@@ -73,6 +74,13 @@ do
     "-v" )
         export VERBOSE=1
         stdout "Verbose now"
+        shift_one_more
+        ;;
+
+    "-d")
+        export VERBOSE=1
+        export DEBUG=1
+        stdout "Debugging enabled. Implicitely turned on verbosity"
         shift_one_more
         ;;
 
