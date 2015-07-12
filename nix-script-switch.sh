@@ -13,7 +13,7 @@ usage() {
 
         -c <command>    Command for nixos-rebuild. See 'man nixos-rebuild'
         -w <path>       Path to your configuration git directory
-        -n              Include hostname in tag name
+        -n              DON'T include hostname in tag name
         -h              Show this help and exit
 
         This command helps you rebuilding your system and keeping track
@@ -47,7 +47,7 @@ COMMAND=
 ARGS=
 WD=
 TAG_NAME=
-HOSTNAME=""
+HOSTNAME="$(hostname)"
 
 while getopts "c:w:t:nh" OPTION
 do
@@ -66,8 +66,8 @@ do
             ;;
 
         n)
-            HOSTNAME=$(hostname)
-            stdout "HOSTNAME = $HOSTNAME"
+            HOSTNAME=""
+            stdout "HOSTNAME disabled"
             ;;
 
         h)
