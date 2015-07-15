@@ -12,12 +12,13 @@ source $(dirname ${BASH_SOURCE[0]})/nix-utils.sh
 
 usage() {
     cat <<EOS
-    $(help_synopsis "${BASH_SOURCE[0]}" "[-y] [-b] [-g <nixpkgs path>] -u <url>")
+    $(help_synopsis "${BASH_SOURCE[0]}" "[-y] [-b] [-c] [-g <nixpkgs path>] -u <url>")
 
         -y          Don't ask before executing things (optional) (not implemented yet)
         -b          Also test-build the package (optional)
         -u <url>    Download and apply this url
         -g <path>   Path of nixpkgs clone (defaults to ./)
+        -c          Don't check out another branch for update
         -h          Show this help and exit
 
         Helper for developers of Nix packages.
@@ -53,8 +54,9 @@ YES=0
 TESTBUILD=0
 NIXPKGS=
 URL=
+CHECKOUT=1
 
-while getopts "ybu:g:h" OPTION
+while getopts "ybu:g:ch" OPTION
 do
     case $OPTION in
         y)
@@ -75,6 +77,11 @@ do
         g)
             NIXPKGS="$OPTARG"
             stdout "NIXPKGS = $NIXPKGS"
+            ;;
+
+        c)
+            CHECKOUT=0
+            stdout "CHECKOUT = $CHECKOUT"
             ;;
 
         h)
@@ -125,7 +132,9 @@ then
 fi
 
 CURRENT_BRANCH=$(__git_current_branch "$NIXPKGS")
-__git "$NIXPKGS" checkout -b update-$PKG
+
+[[ $CHECKOUT == 1 ]] && __git "$NIXPKGS" checkout -b update-$PKG || true
+
 if [[ $? -ne 0 ]]
 then
     stderr "Switching to branch update-$PKG failed."
@@ -133,19 +142,33 @@ then
 fi
 
 cat $TMP | __git "$NIXPKGS" am
-stdout "Patch applied."
+
+if [[ $? -eq 0 ]]
+then
+    stdout "Patch applied."
+else
+    stderr "Patch apply failed. I'm exiting now"
+    exit 1
+fi
 
 if [[ $TESTBUILD -eq 1 ]]
 then
     ask_execute "Build '$PKG' in nixpkgs clone at '$NIXPKGS'" nix-build -A $PKG -I $NIXPKGS
 fi
 
-stdout "Switching back to old commit which was current before we started."
-stdout "Switching to '$CURRENT_BRANCH'"
-__git "$NIXPKGS" checkout $CURRENT_BRANCH
-if [[ $? -ne 0 ]]
+#
+# If we checked out a new branch, we go back, too.
+#
+if [[ $CHECKOUT == 1 ]]
 then
-    stderr "Switching back to '$CURRENT_BRANCH' failed. Please check manually"
-    exit 1
+    stdout "Switching back to old commit which was current before we started."
+    stdout "Switching to '$CURRENT_BRANCH'"
+    __git "$NIXPKGS" checkout $CURRENT_BRANCH
+
+    if [[ $? -ne 0 ]]
+    then
+        stderr "Switching back to '$CURRENT_BRANCH' failed. Please check manually"
+        exit 1
+    fi
 fi
 
