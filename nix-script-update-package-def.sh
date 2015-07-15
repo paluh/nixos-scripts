@@ -142,7 +142,14 @@ then
 fi
 
 cat $TMP | __git "$NIXPKGS" am
-stdout "Patch applied."
+
+if [[ $? -eq 0 ]]
+then
+    stdout "Patch applied."
+else
+    stderr "Patch apply failed. I'm exiting now"
+    exit 1
+fi
 
 if [[ $TESTBUILD -eq 1 ]]
 then
