@@ -16,7 +16,8 @@ stderr() {
 # Print debugging output on stderr, in green
 #
 dbg() {
-    echo -e "${Green}[DEBUG][$(basename $0)]: ${*}${Color_Off}" >&2
+    [[ $DEBUG -eq 1 ]] && \
+        echo -e "${Green}[DEBUG][$(basename $0)]: ${*}${Color_Off}" >&2
 }
 
 #
