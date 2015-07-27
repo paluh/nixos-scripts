@@ -61,22 +61,22 @@ do
     case $OPTION in
         y)
             YES=1
-            stdout "Setting YES"
+            dbg "Setting YES"
             ;;
 
         b)
             TESTBUILD=1
-            stdout "Test-building enabled"
+            dbg "Test-building enabled"
             ;;
 
         u)
             URL="$OPTARG"
-            stdout "URL = $URL"
+            dbg "URL = $URL"
             ;;
 
         g)
             NIXPKGS="$OPTARG"
-            stdout "NIXPKGS = $NIXPKGS"
+            dbg "NIXPKGS = $NIXPKGS"
             ;;
 
         c)
@@ -117,7 +117,7 @@ fi
 
 stdout "Making temp directory"
 TMP=$(mktemp)
-stdout "TMP = $TMP"
+dbg "TMP = $TMP"
 
 stdout "Fetching patch"
 curl $URL > $TMP

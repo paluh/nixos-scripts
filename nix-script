@@ -6,6 +6,7 @@ usage() {
 
     -l | --list-commands    List all available commands
     -v                      Be verbose
+    -d                      Debugging output (enables -v)
     -h                      Show this help and exit
 
 $(help_end)
@@ -76,6 +77,13 @@ do
         shift_one_more
         ;;
 
+    "-d")
+        export VERBOSE=1
+        export DEBUG=1
+        stdout "Debugging enabled. Implicitely turned on verbosity"
+        shift_one_more
+        ;;
+
     "-h" )
         usage
         exit 1
@@ -100,7 +108,7 @@ done
 
 if [ $LIST_COMMANDS -eq 1 ]
 then
-    stdout "Listing commands"
+    dbg "Listing commands"
     for cmd in $(all_commands)
     do
         echo $(scriptname_to_command $cmd)
@@ -110,8 +118,9 @@ fi
 
 [ -z "$COMMAND" ] && stderr "No command given" && exit 1
 
-stdout "Searching for script for '$COMMAND'"
+dbg "Searching for script for '$COMMAND'"
 SCRIPT=$(script_for $COMMAND)
+dbg "Script is: $SCRIPT"
 
 #
 # Error checking whether the script is available and executable.
@@ -119,7 +128,7 @@ SCRIPT=$(script_for $COMMAND)
 [ ! -f $SCRIPT ]   && stderr "Not available: $COMMAND -> $SCRIPT" && exit 1
 [[ ! -x $SCRIPT ]] && stderr "Not executeable: $SCRIPT"           && exit 1
 
-stdout "Parsing args for '$COMMAND'"
+dbg "Parsing args for '$COMMAND'"
 SCRIPT_ARGS=$(shift_n $SHIFT_ARGS $*)
 
 #
