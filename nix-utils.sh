@@ -106,6 +106,13 @@ ask_execute() {
 }
 
 #
+# Check whether the passed path is a git reposity (simple test)
+#
+is_git_repo() {
+    [[ -d "$1" ]] && [[ -d "$1/.git" ]]
+}
+
+#
 # Helper for executing git commands in another git directory
 #
 __git() {
