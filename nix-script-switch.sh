@@ -16,6 +16,7 @@ usage() {
         -n              DON'T include hostname in tag name
         -t <tagname>    Custom tag name
         -p <pkgs>       Generate the switch tag in the nixpkgs at <pkgs> as well.
+        -f <tag-flags>  Flags for git-tag (see 'git tag --help')
         -h              Show this help and exit
 
         This command helps you rebuilding your system and keeping track
@@ -51,8 +52,9 @@ WD=
 TAG_NAME=
 HOSTNAME="$(hostname)"
 NIXPKGS=""
+TAG_FLAGS=""
 
-while getopts "c:w:t:np:h" OPTION
+while getopts "c:w:t:np:f:h" OPTION
 do
     case $OPTION in
         c)
@@ -76,6 +78,11 @@ do
         p)
             NIXPKGS=$OPTARG
             stdout "NIXPKGS = $NIXPKGS"
+            ;;
+
+        f)
+            TAG_FLAGS=$OPTARG
+            dbg "TAG_FLAGS = $TAG_FLAGS"
             ;;
 
         h)
@@ -132,7 +139,7 @@ then
         fi
     fi
 
-    __git "$WD" tag "$TAG_NAME"
+    __git "$WD" tag $TAG_FLAGS "$TAG_NAME"
 
     if [[ ! -z "$NIXPKGS" ]]
     then
