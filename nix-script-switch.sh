@@ -132,7 +132,7 @@ then
         fi
     fi
 
-    __git "$WD" tag -a "$TAG_NAME"
+    __git "$WD" tag "$TAG_NAME"
 
     if [[ ! -z "$NIXPKGS" ]]
     then
