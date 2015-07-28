@@ -16,3 +16,15 @@ RC_CONFIG=~/config
 #
 RC_NIXPKGS=~/nixpkgs
 
+
+#
+#
+# Command: switch
+#
+#
+
+#
+# default flags for git-tagging when doing nix-script switch
+#
+RC_SWITCH_DEFAULT_TAG_FLAGS="-a"
+

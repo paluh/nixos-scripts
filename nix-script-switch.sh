@@ -16,7 +16,7 @@ usage() {
         -n              DON'T include hostname in tag name
         -t <tagname>    Custom tag name
         -p <pkgs>       Generate the switch tag in the nixpkgs at <pkgs> as well. (default: '$RC_NIXPKGS')
-        -f <tag-flags>  Flags for git-tag (see 'git tag --help')
+        -f <tag-flags>  Flags for git-tag (see 'git tag --help') (default: '$RC_SWITCH_DEFAULT_TAG_FLAGS')
         -b              Do not call nixos-rebuild at all.
         -h              Show this help and exit
 
@@ -53,7 +53,7 @@ WD=$RC_CONFIG
 TAG_NAME=
 HOSTNAME="$(hostname)"
 NIXPKGS=$RC_NIXPKGS
-TAG_FLAGS=""
+TAG_FLAGS="$RC_SWITCH_DEFAULT_TAG_FLAGS"
 DONT_BUILD=
 
 while getopts "c:w:t:nbp:f:h" OPTION

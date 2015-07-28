@@ -121,6 +121,7 @@ then
 
     RC_CONFIG=""
     RC_NIXPKGS=""
+    RC_SWITCH_DEFAULT_TAG_FLAGS=""
 else
     source $RC
 fi
