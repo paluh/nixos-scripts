@@ -54,6 +54,7 @@ TAG_NAME=
 HOSTNAME="$(hostname)"
 NIXPKGS=$RC_NIXPKGS
 TAG_FLAGS="$RC_SWITCH_DEFAULT_TAG_FLAGS"
+TAG_FLAGS_NIXPKGS="$RC_SWITCH_DEFAULT_TAG_FLAGS_NIXPKGS"
 DONT_BUILD=
 
 while getopts "c:w:t:nbp:f:h" OPTION
@@ -114,7 +115,7 @@ tag_nixpkgs() {
     c_txt="Trying to create tag '$TAG_NAME' at '$1' on commit '$commit'"
     continue_question "$c_txt" || return
 
-    __git "$1" tag -a "$TAG_NAME" $commit || \
+    __git "$1" tag $TAG_FLAGS_NIXPKGS "$TAG_NAME" $commit || \
         stderr "Could not create tag in nixpkgs clone"
 }
 

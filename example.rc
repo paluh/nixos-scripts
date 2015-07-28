@@ -28,3 +28,9 @@ RC_NIXPKGS=~/nixpkgs
 #
 RC_SWITCH_DEFAULT_TAG_FLAGS="-a"
 
+
+#
+# default flags for git-tagging nixpkgs when doing nix-script switch
+#
+RC_SWITCH_DEFAULT_TAG_FLAGS_NIXPKGS=""
+
