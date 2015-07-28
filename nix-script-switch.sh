@@ -43,6 +43,13 @@ usage() {
 
         can be used to use your local clone of the nixpkgs repository.
 
+$(help_rcvars                                                       \
+    "RC_CONFIG  - Path of your system configuration (git) directory"\
+    "RC_NIXPKGS - Path of your nixpkgs clone"                       \
+    "RC_SWITCH_DEFAULT_TAG_FLAGS            - Default git-tag flags for tagging in system configuration (git) directory"\
+    "RC_SWITCH_DEFAULT_TAG_FLAGS_NIXPKGS    - Default git-tag flags for tagging in nixpkgs"
+)
+
 $(help_end)
 EOS
 }
