@@ -15,6 +15,7 @@ usage() {
         -w <path>       Path to your configuration git directory
         -n              DON'T include hostname in tag name
         -t <tagname>    Custom tag name
+        -p <pkgs>       Generate the switch tag in the nixpkgs at <pkgs> as well.
         -h              Show this help and exit
 
         This command helps you rebuilding your system and keeping track
@@ -49,8 +50,9 @@ ARGS=
 WD=
 TAG_NAME=
 HOSTNAME="$(hostname)"
+NIXPKGS=""
 
-while getopts "c:w:t:nh" OPTION
+while getopts "c:w:t:np:h" OPTION
 do
     case $OPTION in
         c)
@@ -71,12 +73,36 @@ do
             dbg "HOSTNAME disabled"
             ;;
 
+        p)
+            NIXPKGS=$OPTARG
+            stdout "NIXPKGS = $NIXPKGS"
+            ;;
+
         h)
             usage
             exit 1
             ;;
     esac
 done
+
+#
+# Function to generate the tag at $NIXPKGS as well
+#
+tag_nixpkgs() {
+    if [[ ! -d "$1" ]]
+    then
+        stderr "'$1' is not a directory, so can't be a nixpkgs clone"
+        return
+    fi
+
+    commit=$(nixos-version | cut -d . -f 3 | cut -d " " -f 1)
+
+    c_txt="Trying to create tag '$TAG_NAME' at '$1' on commit '$commit'"
+    continue_question "$c_txt" || return
+
+    __git "$1" tag -a "$TAG_NAME" $commit || \
+        stderr "Could not create tag in nixpkgs clone"
+}
 
 ARGS=$(echo $* | sed -r 's/(.*)(\-\-(.*)|$)/\2/')
 dbg "ARGS = $ARGS"
@@ -107,6 +133,12 @@ then
     fi
 
     __git "$WD" tag -a "$TAG_NAME"
+
+    if [[ ! -z "$NIXPKGS" ]]
+    then
+        stdout "Trying to generate tag in $NIXPKGS"
+        tag_nixpkgs "$NIXPKGS"
+    fi
 
 else
     stderr "Switching failed. Won't executing any further commands."
