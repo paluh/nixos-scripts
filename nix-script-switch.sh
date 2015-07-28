@@ -11,7 +11,7 @@ usage() {
 
     $(help_synopsis "${BASH_SOURCE[0]}" "[-h] [-c <command>] -w <working directory> [-- args...]")
 
-        -c <command>    Command for nixos-rebuild. See 'man nixos-rebuild'
+        -c <command>    Command for nixos-rebuild. See 'man nixos-rebuild' (default: switch)
         -w <path>       Path to your configuration git directory
         -n              DON'T include hostname in tag name
         -t <tagname>    Custom tag name
