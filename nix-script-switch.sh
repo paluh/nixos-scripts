@@ -69,30 +69,26 @@ do
     case $OPTION in
         c)
             COMMAND=$OPTARG
-            dbg "COMMAND = $COMMAND"
             ;;
+
         w)
             WD=$OPTARG
-            dbg "WD = $WD"
             ;;
+
         t)
             TAG_NAME=$OPTARG
-            dbg "TAG_NAME = $TAG_NAME"
             ;;
 
         n)
             HOSTNAME=""
-            dbg "HOSTNAME disabled"
             ;;
 
         p)
             NIXPKGS=$OPTARG
-            dbg "NIXPKGS = $NIXPKGS"
             ;;
 
         f)
             TAG_FLAGS=$OPTARG
-            dbg "TAG_FLAGS = $TAG_FLAGS"
             ;;
 
         b)
@@ -126,8 +122,15 @@ tag_nixpkgs() {
         stderr "Could not create tag in nixpkgs clone"
 }
 
+
+dbg "COMMAND    = $COMMAND"
+dbg "WD         = $WD"
+dbg "TAG_NAME   = $TAG_NAME"
+dbg "HOSTNAME   = $HOSTNAME"
+dbg "NIXPKGS    = $NIXPKGS"
+dbg "TAG_FLAGS  = $TAG_FLAGS"
 ARGS=$(echo $* | sed -r 's/(.*)(\-\-(.*)|$)/\2/')
-dbg "ARGS = $ARGS"
+dbg "ARGS       = $ARGS"
 
 [[ -z "$WD" ]] && \
     stderr "No configuration git directory." && \
