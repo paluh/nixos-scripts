@@ -75,7 +75,7 @@ do
 
         p)
             NIXPKGS=$OPTARG
-            stdout "NIXPKGS = $NIXPKGS"
+            dbg "NIXPKGS = $NIXPKGS"
             ;;
 
         h)
