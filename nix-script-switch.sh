@@ -9,10 +9,10 @@ COMMAND="switch"
 usage() {
     cat <<EOS
 
-    $(help_synopsis "${BASH_SOURCE[0]}" "[-h] [-c <command>] -w <working directory> [-- args...]")
+    $(help_synopsis "${BASH_SOURCE[0]}" "[-h] [-c <command>] [-w <working directory>] [-- args...]")
 
         -c <command>    Command for nixos-rebuild. See 'man nixos-rebuild' (default: switch)
-        -w <path>       Path to your configuration git directory
+        -w <path>       Path to your configuration git directory (default: '$RC_CONFIG')
         -n              DON'T include hostname in tag name
         -t <tagname>    Custom tag name
         -p <pkgs>       Generate the switch tag in the nixpkgs at <pkgs> as well.
@@ -49,7 +49,7 @@ EOS
 
 COMMAND=
 ARGS=
-WD=
+WD=$RC_CONFIG
 TAG_NAME=
 HOSTNAME="$(hostname)"
 NIXPKGS=""
