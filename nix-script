@@ -10,6 +10,11 @@ usage() {
     -d                      Debugging output (enables -v)
     -h                      Show this help and exit
 
+$(help_rcvars                                                       \
+"RC_CONFIG  - Path of your system configuration (git) directory"    \
+"RC_NIXPKGS - Path of your nixpkgs clone"
+)
+
 $(help_end)
 EOS
 }
