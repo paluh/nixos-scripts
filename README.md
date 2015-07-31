@@ -59,6 +59,16 @@ nix-script switch -c switch -w /home/myself/conf -- -I nixpkgs=/home/myself/pkgs
 
 Dive into the code or use the `-h` flags for getting more help.
 
+## Branches
+
+`master` is the branch for development. Features and fixes are added via PRs
+to the `master` branch, small fixes are pushed onto master directly. Using
+latest `master` should be safe most of the time, though bugs may be there.
+Using a release version should always be safe, but not as long as a `0` is the
+major number. So, `0.1` should be safe, but it won't get any bug fixes if
+there bugs. `1.0` should be safe and bug fixes will be pushed to `1.x`
+releases if there are any.
+
 ## License
 
 This code is released under the terms of GNU GPL v2.
