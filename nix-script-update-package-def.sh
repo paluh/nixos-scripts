@@ -19,6 +19,7 @@ usage() {
         -u <url>    Download and apply this url
         -g <path>   Path of nixpkgs clone (defaults to ./)
         -c          Don't check out another branch for update
+        -d          Don't checkout base branch after successfull run.
         -h          Show this help and exit
 
         Helper for developers of Nix packages.
@@ -55,8 +56,9 @@ TESTBUILD=0
 NIXPKGS=
 URL=
 CHECKOUT=1
+DONT_CHECKOUT_BASE=
 
-while getopts "ybu:g:ch" OPTION
+while getopts "ybu:g:cdh" OPTION
 do
     case $OPTION in
         y)
@@ -82,6 +84,11 @@ do
         c)
             CHECKOUT=0
             stdout "CHECKOUT = $CHECKOUT"
+            ;;
+
+        d)
+            DONT_CHECKOUT_BASE=1
+            stdout "DONT_CHECKOUT_BASE = $DONT_CHECKOUT_BASE"
             ;;
 
         h)
@@ -159,7 +166,7 @@ fi
 #
 # If we checked out a new branch, we go back, too.
 #
-if [[ $CHECKOUT == 1 ]]
+if [[ $CHECKOUT == 1 && -z "$DONT_CHECKOUT_BASE" ]]
 then
     stdout "Switching back to old commit which was current before we started."
     stdout "Switching to '$CURRENT_BRANCH'"
