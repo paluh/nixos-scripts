@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+#
+# This is an example configuration file for nix-scripts. Copy this file to
+# ~/.nix-scripts.rc and change the values of the variables to match your setup.
+# Remember to update the configuration file whenever you update nix-scripts.
+#
+
+#
+# Path to your configuration directory, where a git lives.
+#
+RC_CONFIG=~/config
+
+#
+# Path to your nixpkgs clone
+#
+RC_NIXPKGS=~/nixpkgs
+
+
+#
+#
+# Command: switch
+#
+#
+
+#
+# default flags for git-tagging when doing nix-script switch
+#
+RC_SWITCH_DEFAULT_TAG_FLAGS="-a"
+
+
+#
+# default flags for git-tagging nixpkgs when doing nix-script switch
+#
+RC_SWITCH_DEFAULT_TAG_FLAGS_NIXPKGS=""
+

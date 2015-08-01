@@ -17,7 +17,7 @@ usage() {
         -y          Don't ask before executing things (optional) (not implemented yet)
         -b          Also test-build the package (optional)
         -u <url>    Download and apply this url
-        -g <path>   Path of nixpkgs clone (defaults to ./)
+        -g <path>   Path of nixpkgs clone (Default: '$RC_NIXPKGS')
         -c          Don't check out another branch for update
         -d          Don't checkout base branch after successfull run.
         -h          Show this help and exit
@@ -53,7 +53,7 @@ EOS
 
 YES=0
 TESTBUILD=0
-NIXPKGS=
+NIXPKGS=$RC_NIXPKGS
 URL=
 CHECKOUT=1
 DONT_CHECKOUT_BASE=

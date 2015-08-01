@@ -44,6 +44,17 @@ help_synopsis() {
 }
 
 #
+# Helper for section on variables from the RC file for the script
+#
+help_rcvars() {
+    echo -e "\tUsed nix-script.rc variables:"
+    echo -e "\t-----------------------------"
+    echo -e ""
+    for s; do echo -e "\t\t${s}"; done
+    echo -e ""
+}
+
+#
 # generate a help text footnote
 #
 help_end() {

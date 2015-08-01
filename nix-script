@@ -4,15 +4,22 @@ usage() {
     cat <<EOS >&2
     $(help_synopsis "${BASE_SOURCE[0]}" "[options] <command> <commandoptions>")
 
+    --conf=<path>           Path for alternative nix-script.rc file. Default: ~/.nix-script.rc
     -l | --list-commands    List all available commands
     -v                      Be verbose
     -d                      Debugging output (enables -v)
     -h                      Show this help and exit
 
+$(help_rcvars                                                       \
+"RC_CONFIG  - Path of your system configuration (git) directory"    \
+"RC_NIXPKGS - Path of your nixpkgs clone"
+)
+
 $(help_end)
 EOS
 }
 
+RC=~/.nix-script.rc
 LIST_COMMANDS=0
 VERBOSE=0
 
@@ -61,6 +68,13 @@ all_commands() {
 for cmd
 do
     case $cmd in
+    --conf=*)
+        RC=$(echo $cmd | sed 's,^--conf\=,,')
+        dbg "RC = $RC"
+        [[ ! -e $RC ]] && stderr "RC file '$RC' does not exist" && exit 1
+        shift_one_more
+        ;;
+
     "--list-commands" )
         LIST_COMMANDS=1
         shift_one_more
@@ -105,6 +119,22 @@ do
         fi
     esac
 done
+
+if [[ ! -f "$RC" ]]
+then
+    dbg "No configuration file, setting up (empty) default values"
+
+    RC_CONFIG=""
+    RC_NIXPKGS=""
+    RC_SWITCH_DEFAULT_TAG_FLAGS=""
+    RC_SWITCH_DEFAULT_TAG_FLAGS_NIXPKGS=""
+else
+    dbg "Configuration file found. Sourcing: '$RC'"
+    source $RC
+fi
+
+dbg "RC_CONFIG = '$RC_CONFIG'"
+dbg "RC_NIXPKGS = '$RC_NIXPKGS'"
 
 if [ $LIST_COMMANDS -eq 1 ]
 then

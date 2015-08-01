@@ -9,14 +9,14 @@ COMMAND="switch"
 usage() {
     cat <<EOS
 
-    $(help_synopsis "${BASH_SOURCE[0]}" "[-h] [-c <command>] -w <working directory> [-- args...]")
+    $(help_synopsis "${BASH_SOURCE[0]}" "[-h] [-c <command>] [-w <working directory>] [-- args...]")
 
         -c <command>    Command for nixos-rebuild. See 'man nixos-rebuild' (default: switch)
-        -w <path>       Path to your configuration git directory
+        -w <path>       Path to your configuration git directory (default: '$RC_CONFIG')
         -n              DON'T include hostname in tag name
         -t <tagname>    Custom tag name
-        -p <pkgs>       Generate the switch tag in the nixpkgs at <pkgs> as well.
-        -f <tag-flags>  Flags for git-tag (see 'git tag --help')
+        -p <pkgs>       Generate the switch tag in the nixpkgs at <pkgs> as well. (default: '$RC_NIXPKGS')
+        -f <tag-flags>  Flags for git-tag (see 'git tag --help') (default: '$RC_SWITCH_DEFAULT_TAG_FLAGS')
         -b              Do not call nixos-rebuild at all.
         -h              Show this help and exit
 
@@ -43,17 +43,25 @@ usage() {
 
         can be used to use your local clone of the nixpkgs repository.
 
+$(help_rcvars                                                       \
+    "RC_CONFIG  - Path of your system configuration (git) directory"\
+    "RC_NIXPKGS - Path of your nixpkgs clone"                       \
+    "RC_SWITCH_DEFAULT_TAG_FLAGS            - Default git-tag flags for tagging in system configuration (git) directory"\
+    "RC_SWITCH_DEFAULT_TAG_FLAGS_NIXPKGS    - Default git-tag flags for tagging in nixpkgs"
+)
+
 $(help_end)
 EOS
 }
 
 COMMAND=
 ARGS=
-WD=
+WD=$RC_CONFIG
 TAG_NAME=
 HOSTNAME="$(hostname)"
-NIXPKGS=""
-TAG_FLAGS=""
+NIXPKGS=$RC_NIXPKGS
+TAG_FLAGS="$RC_SWITCH_DEFAULT_TAG_FLAGS"
+TAG_FLAGS_NIXPKGS="$RC_SWITCH_DEFAULT_TAG_FLAGS_NIXPKGS"
 DONT_BUILD=
 
 while getopts "c:w:t:nbp:f:h" OPTION
@@ -61,30 +69,26 @@ do
     case $OPTION in
         c)
             COMMAND=$OPTARG
-            dbg "COMMAND = $COMMAND"
             ;;
+
         w)
             WD=$OPTARG
-            dbg "WD = $WD"
             ;;
+
         t)
             TAG_NAME=$OPTARG
-            dbg "TAG_NAME = $TAG_NAME"
             ;;
 
         n)
             HOSTNAME=""
-            dbg "HOSTNAME disabled"
             ;;
 
         p)
             NIXPKGS=$OPTARG
-            dbg "NIXPKGS = $NIXPKGS"
             ;;
 
         f)
             TAG_FLAGS=$OPTARG
-            dbg "TAG_FLAGS = $TAG_FLAGS"
             ;;
 
         b)
@@ -114,12 +118,19 @@ tag_nixpkgs() {
     c_txt="Trying to create tag '$TAG_NAME' at '$1' on commit '$commit'"
     continue_question "$c_txt" || return
 
-    __git "$1" tag -a "$TAG_NAME" $commit || \
+    __git "$1" tag $TAG_FLAGS_NIXPKGS "$TAG_NAME" $commit || \
         stderr "Could not create tag in nixpkgs clone"
 }
 
+
+dbg "COMMAND    = $COMMAND"
+dbg "WD         = $WD"
+dbg "TAG_NAME   = $TAG_NAME"
+dbg "HOSTNAME   = $HOSTNAME"
+dbg "NIXPKGS    = $NIXPKGS"
+dbg "TAG_FLAGS  = $TAG_FLAGS"
 ARGS=$(echo $* | sed -r 's/(.*)(\-\-(.*)|$)/\2/')
-dbg "ARGS = $ARGS"
+dbg "ARGS       = $ARGS"
 
 [[ -z "$WD" ]] && \
     stderr "No configuration git directory." && \
