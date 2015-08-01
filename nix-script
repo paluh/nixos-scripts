@@ -129,6 +129,7 @@ then
     RC_SWITCH_DEFAULT_TAG_FLAGS=""
     RC_SWITCH_DEFAULT_TAG_FLAGS_NIXPKGS=""
 else
+    dbg "Configuration file found. Sourcing: '$RC'"
     source $RC
 fi
 
