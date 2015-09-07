@@ -31,8 +31,8 @@ stdout() {
 # Get the command name from a script path
 #
 scriptname_to_command() {
-        echo "$1" | sed 's,^\.\/nix-script-,,' | sed 's,\.sh$,,' | \
-            sed -r "s,$(dirname ${BASH_SOURCE[0]})/nix-script-,,"
+    callee=$([ -z "$2" ] && echo "nix-script" || echo "$2")
+    echo "$1" | sed -r "s,$(dirname ${BASH_SOURCE[0]})/$callee-(.*)\.sh$,\1,"
 }
 
 #
@@ -130,4 +130,34 @@ __git_current_branch() {
     branch_name=$(git symbolic-ref -q HEAD)
     branch_name=${branch_name##refs/heads/}
     ([[ -z "$branch_name" ]] && git rev-parse HEAD) || echo $branch_name
+}
+
+# Argument 1: Caller script name, format: "nix-script"
+caller_util_all_commands() {
+    find $(dirname ${BASH_SOURCE[0]}) -type f -name "${1}-*.sh"
+}
+
+# Argument 1: Caller script name, format: "nix-script"
+caller_util_list_subcommands_for() {
+    for cmd in $(caller_util_all_commands $1)
+    do
+        scriptname_to_command "$cmd" "$1"
+    done | sort
+}
+
+# Argument 1: Caller script name
+# Argzment 2: Command name
+caller_util_script_for() {
+    echo "$(dirname ${BASH_SOURCE[0]})/${1}-${2}.sh"
+}
+
+# Argument 1: Caller script name
+# Argzment 2: Command name
+caller_util_get_script() {
+    local SCRIPT=$(caller_util_script_for $1 $2)
+
+    [[ ! -f $SCRIPT ]] && stderr "Not available: $COMMAND -> $SCRIPT" && exit 1
+    [[ ! -x $SCRIPT ]] && stderr "Not executeable: $SCRIPT" && exit 1
+
+    echo "$SCRIPT"
 }
