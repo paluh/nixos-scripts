@@ -4,7 +4,7 @@ Utility scripts collection for working with nixos tools.
 
 ## Usage
 
-Everything can be called by using the `nix-script` executeable:
+Everything can be called by using the `nix-script` executable:
 
 ```bash
 $ nix-script show-commit
@@ -12,7 +12,7 @@ $ nix-script ls-profiles
 # and so on
 ```
 
-The `nix-script` executeable can be called with `-l` to list the available
+The `nix-script` executable can be called with `-l` to list the available
 commands or `-h` to get the help text. Calling `nix-script -v <something>`
 will turn on verbosity and each script will explain what it does.
 
@@ -32,7 +32,7 @@ nix-script diff-generations -s -n 114..115
 ```
 
 Execute "nixos-rebuild switch" and tags the current checked-out commit
-in "/home/myself/nixos-configuration/" on successfull build (including
+in "/home/myself/nixos-configuration/" on successful build (including
 generation number). Format for the tag name is
 
 ```plain
@@ -47,7 +47,7 @@ or... you get the point
 nix-script switch -c switch -w /home/myself/nixos-configuration/
 ```
 
-Add a `-n` to include the hostname into the tag name (usefull if you share
+Add a `-n` to include the hostname into the tag name (useful if you share
 your configuration over several hosts, as I do).
 
 You can also provide flags for 'nixos-rebuild' like so:
