@@ -165,4 +165,4 @@ SCRIPT_ARGS=$(shift_n $SHIFT_ARGS $*)
 # execute the script with its arguments
 #
 stdout "Calling: '$SCRIPT $SCRIPT_ARGS'"
-exec bash $SCRIPT $SCRIPT_ARGS
+RC_CONFIG=$RC_CONFIG RC_NIXPKGS=$RC_NIXPKGS exec bash $SCRIPT $SCRIPT_ARGS
