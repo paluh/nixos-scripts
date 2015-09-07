@@ -161,3 +161,13 @@ caller_util_get_script() {
 
     echo "$SCRIPT"
 }
+
+#
+# Container helper functions
+#
+
+# get the configuration.nix path for the container by name
+container_conf_path() {
+    echo /var/lib/containers/$1/etc/nixos/configuration.nix
+}
+
