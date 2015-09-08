@@ -95,6 +95,13 @@ current_user_generation() {
 }
 
 #
+# get the current channel generation
+#
+current_channel_generation() {
+    grep_generation "sudo nix-env -p /nix/var/nix/profiles/per-user/root/channels --list-generations"
+}
+
+#
 # Ask the user whether to continue or not
 #
 continue_question() {
