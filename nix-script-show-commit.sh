@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
-nixos-version | cut -d . -f 3 | cut -d " " -f 1
+nixos-version | awk -F. '{print $3}' | awk '{print $1}'
 
