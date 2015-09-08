@@ -121,7 +121,12 @@ ask_execute() {
 #
 __git() {
     DIR=$1; shift
-    explain git --git-dir="$DIR/.git" --work-tree="$DIR" $*
+    if [[ ! -z "$GIT_CONFIRM" ]]
+    then
+        ask_execute "git --git-dir='$DIR/.git' --work-tree='$DIR' $*"
+    else
+        explain git --git-dir="$DIR/.git" --work-tree="$DIR" $*
+    fi
 }
 
 # Gets the current branch name or the hash of the current rev if there is no
