@@ -12,7 +12,7 @@ source $(dirname ${BASH_SOURCE[0]})/nix-utils.sh
 
 usage() {
     cat <<EOS
-    $(help_synopsis "${BASH_SOURCE[0]}" "[-y] [-b] [-c] [-g <nixpkgs path>] [-j <n>] [-C <n>] -u <url>")
+    $(help_synopsis "${BASH_SOURCE[0]}" "[-y] [-b] [-c] [-g <nixpkgs path>] [-j <n>] [-C <n>] [-p <yes|no>] -u <url>")
 
         -y          Don't ask before executing things (optional) (not implemented yet)
         -b          Also test-build the package (optional)
@@ -22,6 +22,7 @@ usage() {
         -d          Don't checkout base branch after successfull run.
         -j <n>      Pass "-j <n>" to nix-build
         -C <n>      Pass "--cores <n>" to nix-build
+        -p <yes|no> Do a git-push after successful run. (remote specified in config file)
         -h          Show this help and exit
 
         Helper for developers of Nix packages.
@@ -49,9 +50,11 @@ usage() {
             # Verbosity is on.
             nix-script -v update-package-def -b -u http://monitor.nixos.org/patch?p=ffmpeg-full&v=2.7.1&m=Matthias+Beyer
 
-$(help_rcvars                                                       \
-    "RC_UPD_NIX_BUILD_J     - Default number to pass to 'nix-build -j'"
-    "RC_UPD_NIX_BUILD_CORES - Default number to pass to 'nix-build --cores'"
+$(help_rcvars                                                           \
+    "RC_UPD_NIX_BUILD_J     - Default number to pass to 'nix-build -j'" \
+    "RC_UPD_NIX_BUILD_CORES - Default number to pass to 'nix-build --cores'" \
+    "RC_UPD_PUSH            - Set to 1 to enable git-push after applying the patch (and building it)"\
+    "RC_UPD_PUSH_REMOTE     - git remote(s) to push to"
 )
 
 $(help_end "${BASH_SOURCE[0]}")
@@ -66,8 +69,9 @@ CHECKOUT=1
 DONT_CHECKOUT_BASE=
 J="$RC_UPD_NIX_BUILD_J"
 CORES="$RC_UPD_NIX_BUILD_CORES"
+DO_PUSH=
 
-while getopts "ybu:g:cdj:C:h" OPTION
+while getopts "ybu:g:cdj:C:p:h" OPTION
 do
     case $OPTION in
         y)
@@ -108,6 +112,12 @@ do
         C)
             CORES="$OPTARG"
             stderr "CORES = $CORES"
+            ;;
+
+        p)
+            [[ "$OPTARG" == "yes" ]] && DO_PUSH=1
+            [[ "$OPTARG" == "no" ]]  && DO_PUSH=0
+            stdout "DO_PUSH = $DO_PUSH"
             ;;
 
         h)
@@ -186,6 +196,30 @@ then
     [[ ! -z "$CORES" ]] && __cores="-j $CORES"
 
     ask_execute "Build '$PKG' in nixpkgs clone at '$NIXPKGS'" nix-build -A $PKG -I $NIXPKGS $__j $__cores
+fi
+
+#
+# If the config says yes and is not overridden
+# OR
+# If the config is overridden with yes
+#
+if [[ ($RC_UPD_PUSH -eq 1 && -z "$DO_PUSH") || ! -z "$DO_PUSH" && $DO_PUSH -eq 1 ]]
+then
+    dbg "RC_UPD_PUSH enabled or overridden"
+    dbg "Starting performing git-push"
+
+    if [[ ! -z "$RC_UPD_PUSH_REMOTE" ]]
+    then
+        __git "$NIXPKGS" push $RC_UPD_PUSH_REMOTE
+        stdout "git-push done"
+    else
+        stderr "Cannot git-push: No remote set in configuration"
+        stderr "Aborting git-push."
+        continue_question "Continue execution?" || exit 1
+    fi
+
+else
+    dbg "git-push won't be performed"
 fi
 
 #

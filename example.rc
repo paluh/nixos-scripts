@@ -59,3 +59,15 @@ RC_UPD_NIX_BUILD_J=2
 #
 RC_UPD_NIX_BUILD_CORES=2
 
+#
+# when updating a package definition, do git-push afterwards
+# 0 = no, 1 = yes
+#
+RC_UPD_PUSH=0
+
+#
+# when updating a package definition, push to this remote. Several can be
+# specified.
+#
+RC_UPD_PUSH_REMOTE="github"
+
