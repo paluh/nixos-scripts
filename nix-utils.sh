@@ -40,7 +40,7 @@ scriptname_to_command() {
 #
 help_synopsis() {
     SCRIPT=$(scriptname_to_command $1); shift
-    echo "usage: nix-script $SCRIPT $*"
+    echo "usage: nix-script [-v] $SCRIPT $*"
 }
 
 #
