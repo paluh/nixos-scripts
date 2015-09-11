@@ -9,7 +9,7 @@ usage() {
         -g <n>  Generation to checkout
         -h      Show this help and exit
 
-$(help_end)
+$(help_end "channel")
 EOS
 }
 

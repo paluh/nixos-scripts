@@ -11,7 +11,7 @@ usage() {
     -n <generations>    | Generations to show diff in form a..b
     -h                  | Show this help and exit
 
-$(help_end)
+$(help_end "channel")
 EOS
 }
 

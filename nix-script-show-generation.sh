@@ -19,7 +19,7 @@ usage() {
         # With verbosity on.
         nix-script -v show-generations -s
 
-$(help_end)
+$(help_end "${BASH_SOURCE[0]}")
 EOS
 }
 
