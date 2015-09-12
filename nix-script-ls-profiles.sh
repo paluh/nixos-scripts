@@ -28,7 +28,7 @@ usage() {
         # With verbosity on.
         nix-script -v ls-profiles -s -n
 
-$(help_end)
+$(help_end "${BASH_SOURCE[0]}")
 EOS
 }
 

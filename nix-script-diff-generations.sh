@@ -20,7 +20,7 @@ usage() {
         # with verbosity on
         nix-script -v diff-generations -s -n 123..145
 
-$(help_end)
+$(help_end "${BASH_SOURCE[0]}")
 EOS
 }
 

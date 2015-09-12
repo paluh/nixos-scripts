@@ -50,7 +50,7 @@ $(help_rcvars                                                       \
     "RC_SWITCH_DEFAULT_TAG_FLAGS_NIXPKGS    - Default git-tag flags for tagging in nixpkgs"
 )
 
-$(help_end)
+$(help_end "${BASH_SOURCE[0]}")
 EOS
 }
 

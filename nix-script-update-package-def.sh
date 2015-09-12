@@ -47,7 +47,7 @@ usage() {
             # Verbosity is on.
             nix-script -v update-package-def -b -u http://monitor.nixos.org/patch?p=ffmpeg-full&v=2.7.1&m=Matthias+Beyer
 
-$(help_end)
+$(help_end "${BASH_SOURCE[0]}")
 EOS
 }
 
