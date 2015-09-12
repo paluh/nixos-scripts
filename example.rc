@@ -34,3 +34,11 @@ RC_SWITCH_DEFAULT_TAG_FLAGS="-a"
 #
 RC_SWITCH_DEFAULT_TAG_FLAGS_NIXPKGS=""
 
+#
+# Container configuration templates can be put in single files and put in a
+# directory which should be configured here.
+#
+# The file names must end with .template.nix
+#
+RC_CONTAINER_CONF_TEMPLATE_DIR=~/.nixos-scripts-container-conf-templates/
+
