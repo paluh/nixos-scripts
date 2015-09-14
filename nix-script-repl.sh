@@ -66,12 +66,27 @@ __list() {
     caller_util_list_subcommands_for "nix-script"
 }
 
+__builtin__() {
+    local str=$1; shift
+    local cmd=$1; shift
+    local args=$*
+
+    if [[ $COMMAND =~ $str ]]
+    then
+        $cmd $args && prompt
+        return 1
+    else
+        return 0
+    fi
+}
+
 prompt
 while read COMMAND ARGS
 do
     [[ $COMMAND =~ "quit" || $COMMAND =~ "exit" ]] && break
-    [[ $COMMAND =~ "help" ]] && usage  && prompt && continue
-    [[ $COMMAND =~ "list" ]] && __list && prompt && continue
+
+    __builtin__ "help" usage $ARGS   || continue
+    __builtin__ "list" __list $ARGS  || continue
 
     dbg "Got '$COMMAND' with args '$ARGS'"
     stdout "Searching for script for '$COMMAND'"
