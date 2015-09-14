@@ -109,13 +109,7 @@ __builtin__() {
     local cmd=$1; shift
     local args=$*
 
-    if [[ $COMMAND =~ $str ]]
-    then
-        $cmd $args && prompt
-        return 0
-    else
-        return 1
-    fi
+    [[ $COMMAND =~ $str ]] && $cmd $args && prompt
 }
 
 prompt
