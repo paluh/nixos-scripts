@@ -85,6 +85,25 @@ __verbosity() {
     esac
 }
 
+__debugging() {
+    case $1 in
+        on)
+            export DEBUG=1
+            dbg "DEBUG = $DEBUG"
+            stdout "Debugging is now ON"
+            ;;
+        off)
+            export DEBUG=0
+            dbg "DEBUG = $DEBUG"
+            stdout "Debugging is now ON"
+            ;;
+        *)
+            stderr "Unknown argument: $1"
+            stderr "Usage: debuggig [on|off]"
+            ;;
+    esac
+}
+
 __builtin__() {
     local str=$1; shift
     local cmd=$1; shift
@@ -107,6 +126,7 @@ do
     __builtin__ "help"      usage       $ARGS  || continue
     __builtin__ "list"      __list      $ARGS  || continue
     __builtin__ "verbosity" __verbosity $ARGS  || continue
+    __builtin__ "debugging" __debugging $ARGS  || continue
 
     dbg "Got '$COMMAND' with args '$ARGS'"
     stdout "Searching for script for '$COMMAND'"
