@@ -112,9 +112,9 @@ __builtin__() {
     if [[ $COMMAND =~ $str ]]
     then
         $cmd $args && prompt
-        return 1
-    else
         return 0
+    else
+        return 1
     fi
 }
 
@@ -123,10 +123,10 @@ while read COMMAND ARGS
 do
     [[ $COMMAND =~ "quit" || $COMMAND =~ "exit" ]] && break
 
-    __builtin__ "help"      usage       $ARGS  || continue
-    __builtin__ "list"      __list      $ARGS  || continue
-    __builtin__ "verbosity" __verbosity $ARGS  || continue
-    __builtin__ "debugging" __debugging $ARGS  || continue
+    __builtin__ "help"      usage       $ARGS  && continue
+    __builtin__ "list"      __list      $ARGS  && continue
+    __builtin__ "verbosity" __verbosity $ARGS  && continue
+    __builtin__ "debugging" __debugging $ARGS  && continue
 
     dbg "Got '$COMMAND' with args '$ARGS'"
     stdout "Searching for script for '$COMMAND'"
