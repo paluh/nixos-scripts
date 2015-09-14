@@ -66,6 +66,25 @@ __list() {
     caller_util_list_subcommands_for "nix-script"
 }
 
+__verbosity() {
+    case $1 in
+        on)
+            export VERBOSE=1
+            dbg "VERBOSE = $VERBOSE"
+            stdout "Verbosity is now ON"
+            ;;
+        off)
+            export VERBOSE=0
+            dbg "VERBOSE = $VERBOSE"
+            stdout "Verbosity is now ON"
+            ;;
+        *)
+            stderr "Unknown argument: $1"
+            stderr "Usage: verbosity [on|off]"
+            ;;
+    esac
+}
+
 __builtin__() {
     local str=$1; shift
     local cmd=$1; shift
@@ -85,8 +104,9 @@ while read COMMAND ARGS
 do
     [[ $COMMAND =~ "quit" || $COMMAND =~ "exit" ]] && break
 
-    __builtin__ "help" usage $ARGS   || continue
-    __builtin__ "list" __list $ARGS  || continue
+    __builtin__ "help"      usage       $ARGS  || continue
+    __builtin__ "list"      __list      $ARGS  || continue
+    __builtin__ "verbosity" __verbosity $ARGS  || continue
 
     dbg "Got '$COMMAND' with args '$ARGS'"
     stdout "Searching for script for '$COMMAND'"
