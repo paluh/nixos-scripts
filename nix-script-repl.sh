@@ -104,6 +104,12 @@ __debugging() {
     esac
 }
 
+__exit() {
+    stdout "Ready. Bye-Bye!"
+    [[ -z "$1" ]] && exit 0
+    exit $1
+}
+
 __builtin__() {
     local str=$1; shift
     local cmd=$1; shift
@@ -115,9 +121,8 @@ __builtin__() {
 prompt
 while read COMMAND ARGS
 do
-    [[ $COMMAND =~ "quit" || $COMMAND =~ "exit" ]] && break
-
     __builtin__ "help"      usage       $ARGS  && continue
+    __builtin__ "exit"      __exit      $ARGS  && continue
     __builtin__ "list"      __list      $ARGS  && continue
     __builtin__ "verbosity" __verbosity $ARGS  && continue
     __builtin__ "debugging" __debugging $ARGS  && continue
@@ -145,6 +150,4 @@ do
     fi
     prompt
 done
-
-stdout "Ready. Bye-Bye!"
 
