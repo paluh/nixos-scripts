@@ -15,7 +15,7 @@ usage() {
         -w <path>       Path to your configuration git directory (default: '$RC_CONFIG')
         -n              DON'T include hostname in tag name
         -t <tagname>    Custom tag name
-        -p <pkgs>       Generate the switch tag in the nixpkgs at <pkgs> as well. (default: '$RC_NIXPKGS')
+        -p [<pkgs>]     Generate the switch tag in the nixpkgs at <pkgs> as well. (default: '$RC_NIXPKGS')
         -f <tag-flags>  Flags for git-tag (see 'git tag --help') (default: '$RC_SWITCH_DEFAULT_TAG_FLAGS')
         -b              Do not call nixos-rebuild at all.
         -h              Show this help and exit
@@ -59,6 +59,7 @@ ARGS=
 WD=$RC_CONFIG
 TAG_NAME=
 HOSTNAME="$(hostname)"
+TAG_NIXPKGS=0
 NIXPKGS=$RC_NIXPKGS
 TAG_FLAGS="$RC_SWITCH_DEFAULT_TAG_FLAGS"
 TAG_FLAGS_NIXPKGS="$RC_SWITCH_DEFAULT_TAG_FLAGS_NIXPKGS"
@@ -84,7 +85,11 @@ do
             ;;
 
         p)
-            NIXPKGS=$OPTARG
+            if [[ ! -z "$OPTARG" ]]
+            then
+                NIXPKGS=$OPTARG
+            fi
+            TAG_NIXPKGS=1
             ;;
 
         f)
@@ -165,10 +170,20 @@ then
 
     __git "$WD" tag $TAG_FLAGS "$TAG_NAME"
 
-    if [[ ! -z "$NIXPKGS" ]]
+    if [[ $TAG_NIXPKGS -eq 1 ]]
     then
-        stdout "Trying to generate tag in $NIXPKGS"
-        tag_nixpkgs "$NIXPKGS"
+        if [[ ! -z "$NIXPKGS" ]]
+        then
+            stdout "Trying to generate tag in $NIXPKGS"
+            tag_nixpkgs "$NIXPKGS"
+        else
+            stderr "Do not generate a tag in the nixpkgs clon"
+            stderr "no NIXPKGS given."
+            usage
+            stderr "Continuing..."
+        fi
+    else
+        stdout "nixpkgs tag generating disabled"
     fi
 
 else
