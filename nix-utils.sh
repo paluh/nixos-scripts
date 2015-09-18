@@ -6,6 +6,13 @@ Yellow='\e[0;33m'
 Green='\e[0;32m'
 
 #
+# Check whether a string (2nd arg) contains a substring (1st arg)
+#
+stringcontains() {
+    [ -z "${2##*$1*}" ]
+}
+
+#
 # Print on stderr, in red
 #
 stderr() {
@@ -25,6 +32,25 @@ dbg() {
 #
 stdout() {
     [[ $VERBOSE -eq 1 ]] && echo -e "${Green}[$(basename $0)]:${Color_Off} $*"
+}
+
+#
+# List all available commands as script path
+#
+all_commands() {
+    find $(dirname ${BASH_SOURCE[0]}) \
+        -type f \
+        -executable \
+        -name "nix-script-*.sh"
+}
+
+#
+# Get the name of the script file for the command passed as argument
+#
+# Does not check whether the file exists.
+#
+script_for() {
+    echo "$(dirname ${BASH_SOURCE[0]})/nix-script-${1}.sh"
 }
 
 #
