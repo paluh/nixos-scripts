@@ -9,7 +9,7 @@ COMMAND="switch"
 usage() {
     cat <<EOS
 
-    $(help_synopsis "${BASH_SOURCE[0]}" "[-h] [-c <command>] [-w <working directory>] [-- args...]")
+    $(help_synopsis "${BASH_SOURCE[0]}" "[-h] [-q] [-c <command>] [-w <working directory>] [-- args...]")
 
         -c <command>    Command for nixos-rebuild. See 'man nixos-rebuild' (default: switch)
         -w <path>       Path to your configuration git directory (default: '$RC_CONFIG')
@@ -18,6 +18,7 @@ usage() {
         -p [<pkgs>]     Generate the switch tag in the nixpkgs at <pkgs> as well. (default: '$RC_NIXPKGS')
         -f <tag-flags>  Flags for git-tag (see 'git tag --help') (default: '$RC_SWITCH_DEFAULT_TAG_FLAGS')
         -b              Do not call nixos-rebuild at all.
+        -q              Don't pass -Q to nixos-rebuild
         -h              Show this help and exit
 
         This command helps you rebuilding your system and keeping track
@@ -64,8 +65,9 @@ NIXPKGS=$RC_NIXPKGS
 TAG_FLAGS="$RC_SWITCH_DEFAULT_TAG_FLAGS"
 TAG_FLAGS_NIXPKGS="$RC_SWITCH_DEFAULT_TAG_FLAGS_NIXPKGS"
 DONT_BUILD=
+QUIET=1
 
-while getopts "c:w:t:nbp:f:h" OPTION
+while getopts "c:w:t:nbp:f:qh" OPTION
 do
     case $OPTION in
         c)
@@ -99,6 +101,11 @@ do
         b)
             DONT_BUILD=1
             dbg "DONT_BUILD = $DONT_BUILD"
+            ;;
+
+        q)
+            QUIET=0
+            dbg "QUIET = $QUIET"
             ;;
 
         h)
@@ -146,7 +153,9 @@ dbg "ARGS       = $ARGS"
 
 if [[ -z "$DONT_BUILD" ]]
 then
-    explain sudo nixos-rebuild $COMMAND $ARGS
+    __q="-Q"
+    [[ $QUIET -eq 0 ]] && __q=""
+    explain sudo nixos-rebuild $__q $COMMAND $ARGS
     REBUILD_EXIT=$?
 else
     stdout "Do not call nixos-rebuild"
