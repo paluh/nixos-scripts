@@ -147,6 +147,9 @@ dbg "ARGS = $ARGS"
 
 [[ ! -d "$WD" ]] && stderr "No directory: $WD" && exit 1
 
+TAG_TARGET=$(__git "$WD" rev-parse HEAD)
+stdout "Tag in config will be generated at '$TAG_TARGET'"
+
 if [[ -z "$DONT_BUILD" ]]
 then
     __q="-Q"
@@ -181,7 +184,7 @@ then
     fi
 fi
 
-__git "$WD" tag $TAG_FLAGS "$TAG_NAME"
+__git "$WD" tag $TAG_FLAGS "$TAG_NAME" "$TAG_TARGET"
 
 if [[ $TAG_NIXPKGS -eq 1 ]]
 then
