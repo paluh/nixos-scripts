@@ -82,18 +82,22 @@ do
     case $OPTION in
         c)
             COMMAND=$OPTARG
+            dbg "COMMAND = $COMMAND"
             ;;
 
         w)
             WD=$OPTARG
+            dbg "WD = $WD"
             ;;
 
         t)
             TAG_NAME=$OPTARG
+            dbg "TAG_NAME = $TAG_NAME"
             ;;
 
         n)
             HOSTNAME=""
+            dbg "HOSTNAME = $HOSTNAME"
             ;;
 
         p)
@@ -103,9 +107,11 @@ do
             fi
             TAG_NIXPKGS=1
             ;;
+            dbg "TAG_NIXPKGS = $TAG_NIXPKGS"
 
         f)
             TAG_FLAGS=$OPTARG
+            dbg "TAG_FLAGS = $TAG_FLAGS"
             ;;
 
         b)
@@ -132,6 +138,9 @@ do
     esac
 done
 
+ARGS=$(echo $* | sed -r 's/(.*)(\-\-(.*)|$)/\2/')
+dbg "ARGS = $ARGS"
+
 #
 # Function to generate the tag at $NIXPKGS as well
 #
@@ -150,16 +159,6 @@ tag_nixpkgs() {
     __git "$1" tag $TAG_FLAGS_NIXPKGS "$TAG_NAME" $commit || \
         stderr "Could not create tag in nixpkgs clone"
 }
-
-
-dbg "COMMAND    = $COMMAND"
-dbg "WD         = $WD"
-dbg "TAG_NAME   = $TAG_NAME"
-dbg "HOSTNAME   = $HOSTNAME"
-dbg "NIXPKGS    = $NIXPKGS"
-dbg "TAG_FLAGS  = $TAG_FLAGS"
-ARGS=$(echo $* | sed -r 's/(.*)(\-\-(.*)|$)/\2/')
-dbg "ARGS       = $ARGS"
 
 [[ -z "$WD" ]] && \
     stderr "No configuration git directory." && \
