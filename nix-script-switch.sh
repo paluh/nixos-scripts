@@ -145,11 +145,9 @@ dbg "ARGS = $ARGS"
 # Function to generate the tag at $NIXPKGS as well
 #
 tag_nixpkgs() {
-    if [[ ! -d "$1" ]]
-    then
-        stderr "'$1' is not a directory, so can't be a nixpkgs clone"
+    [[ ! -d "$1" ]] && \
+        stderr "'$1' is not a directory, so can't be a nixpkgs clone" && \
         return
-    fi
 
     commit=$(nixos-version | cut -d . -f 3 | cut -d " " -f 1)
 
