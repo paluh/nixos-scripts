@@ -162,7 +162,7 @@ tag_nixpkgs() {
     stderr "No configuration git directory." && \
     stderr "Won't do anything" && exit 1
 
-[[ ! -d "$WD" ]]        && stderr "No directory: $WD" && exit 1
+[[ ! -d "$WD" ]] && stderr "No directory: $WD" && exit 1
 
 if [[ -z "$DONT_BUILD" ]]
 then
