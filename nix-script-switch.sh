@@ -207,7 +207,7 @@ then
         stdout "Trying to generate tag in $NIXPKGS"
         tag_nixpkgs "$NIXPKGS"
     else
-        stderr "Do not generate a tag in the nixpkgs clon"
+        stderr "Do not generate a tag in the nixpkgs clone"
         stderr "no NIXPKGS given."
         usage
         stderr "Continuing..."
