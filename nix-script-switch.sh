@@ -9,17 +9,31 @@ COMMAND="switch"
 usage() {
     cat <<EOS
 
-    $(help_synopsis "${BASH_SOURCE[0]}" "[-h] [-q] [-c <command>] [-w <working directory>]")
+    $(help_synopsis "${BASH_SOURCE[0]}" \
+                    "[-h] [-q] [-c <command>] [-w <working directory>]")
 
-        -c <command>    Command for nixos-rebuild. See 'man nixos-rebuild' (default: switch)
-        -w <path>       Path to your configuration git directory (default: '$RC_CONFIG')
+        -c <command>    Command for nixos-rebuild.
+                        See 'man nixos-rebuild' (default: switch)
+
+        -w <path>       Path to your configuration git directory
+                        (default: '$RC_CONFIG')
+
         -n              DON'T include hostname in tag name
+
         -t <tagname>    Custom tag name
-        -p [<pkgs>]     Generate the switch tag in the nixpkgs at <pkgs> as well. (default: '$RC_NIXPKGS')
-        -f <tag-flags>  Flags for git-tag (see 'git tag --help') (default: '$RC_SWITCH_DEFAULT_TAG_FLAGS')
+
+        -p [<pkgs>]     Generate the switch tag in the nixpkgs at <pkgs>
+                        as well.  (default: '$RC_NIXPKGS')
+
+        -f <tag-flags>  Flags for git-tag (see 'git tag --help')
+                        (default: '$RC_SWITCH_DEFAULT_TAG_FLAGS')
+
         -b              Do not call nixos-rebuild at all.
+
         -q              Don't pass -Q to nixos-rebuild
+
         -s <pkgs>       Use these nixpkgs clone instead of channels
+
         -h              Show this help and exit
 
         This command helps you rebuilding your system and keeping track
@@ -36,6 +50,7 @@ usage() {
             # in the tag as well (helpful if your configuration is
             # shared between hosts).
             # Verbosity is on here.
+
             nix-script -v switch -c switch -w /home/me/config -n
 
 $(help_rcvars                                                       \
