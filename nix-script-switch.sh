@@ -181,41 +181,38 @@ else
     REBUILD_EXIT=0
 fi
 
-if [[ $REBUILD_EXIT -eq 0 ]]
-then
-    LASTGEN=$(current_system_generation)
-    sudo -k
-
-    stdout "sudo -k succeeded"
-    stdout "Last generation was: $LASTGEN"
-
-    if [[ -z "$TAG_NAME" ]]
-    then
-        if [[ -z "$HOSTNAME" ]]; then TAG_NAME="nixos-$LASTGEN-$COMMAND"
-        else TAG_NAME="nixos-$HOSTNAME-$LASTGEN-$COMMAND"
-        fi
-    fi
-
-    __git "$WD" tag $TAG_FLAGS "$TAG_NAME"
-
-    if [[ $TAG_NIXPKGS -eq 1 ]]
-    then
-        if [[ ! -z "$NIXPKGS" ]]
-        then
-            stdout "Trying to generate tag in $NIXPKGS"
-            tag_nixpkgs "$NIXPKGS"
-        else
-            stderr "Do not generate a tag in the nixpkgs clon"
-            stderr "no NIXPKGS given."
-            usage
-            stderr "Continuing..."
-        fi
-    else
-        stdout "nixpkgs tag generating disabled"
-    fi
-
-else
-    stderr "Switching failed. Won't executing any further commands."
+[[ ! $REBUILD_EXIT -eq 0 ]] && \
+    stderr "Switching failed. Won't executing any further commands." && \
     exit $REBUILD_EXIT
+
+LASTGEN=$(current_system_generation)
+sudo -k
+
+stdout "sudo -k succeeded"
+stdout "Last generation was: $LASTGEN"
+
+if [[ -z "$TAG_NAME" ]]
+then
+    if [[ -z "$HOSTNAME" ]]; then TAG_NAME="nixos-$LASTGEN-$COMMAND"
+    else TAG_NAME="nixos-$HOSTNAME-$LASTGEN-$COMMAND"
+    fi
+fi
+
+__git "$WD" tag $TAG_FLAGS "$TAG_NAME"
+
+if [[ $TAG_NIXPKGS -eq 1 ]]
+then
+    if [[ ! -z "$NIXPKGS" ]]
+    then
+        stdout "Trying to generate tag in $NIXPKGS"
+        tag_nixpkgs "$NIXPKGS"
+    else
+        stderr "Do not generate a tag in the nixpkgs clon"
+        stderr "no NIXPKGS given."
+        usage
+        stderr "Continuing..."
+    fi
+else
+    stdout "nixpkgs tag generating disabled"
 fi
 
