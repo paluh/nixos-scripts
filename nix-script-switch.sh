@@ -207,3 +207,4 @@ else
     stdout "nixpkgs tag generating disabled"
 fi
 
+stdout "Ready."
