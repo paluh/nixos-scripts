@@ -64,7 +64,7 @@ $(help_end "${BASH_SOURCE[0]}")
 EOS
 }
 
-COMMAND=
+COMMAND=switch
 ARGS=
 WD=$RC_CONFIG
 TAG_NAME=
@@ -165,7 +165,6 @@ tag_nixpkgs() {
     stderr "Won't do anything" && exit 1
 
 [[ ! -d "$WD" ]]        && stderr "No directory: $WD" && exit 1
-[[ -z "$COMMAND" ]]     && COMMAND="switch"
 
 if [[ -z "$DONT_BUILD" ]]
 then
