@@ -141,23 +141,6 @@ done
 ARGS=$(echo $* | sed -r 's/(.*)(\-\-(.*)|$)/\2/')
 dbg "ARGS = $ARGS"
 
-#
-# Function to generate the tag at $NIXPKGS as well
-#
-tag_nixpkgs() {
-    [[ ! -d "$1" ]] && \
-        stderr "'$1' is not a directory, so can't be a nixpkgs clone" && \
-        return
-
-    commit=$(nixos-version | cut -d . -f 3 | cut -d " " -f 1)
-
-    c_txt="Trying to create tag '$TAG_NAME' at '$1' on commit '$commit'"
-    continue_question "$c_txt" || return
-
-    __git "$1" tag $TAG_FLAGS_NIXPKGS "$TAG_NAME" $commit || \
-        stderr "Could not create tag in nixpkgs clone"
-}
-
 [[ -z "$WD" ]] && \
     stderr "No configuration git directory." && \
     stderr "Won't do anything" && exit 1
@@ -205,7 +188,15 @@ then
     if [[ ! -z "$NIXPKGS" ]]
     then
         stdout "Trying to generate tag in $NIXPKGS"
-        tag_nixpkgs "$NIXPKGS"
+        [[ ! -d "$NIXPKGS" ]] && \
+            stderr "'$NIXPKGS' is not a directory, so can't be a nixpkgs clone" && \
+            exit 1
+
+        commit=$(nixos-version | cut -d . -f 3 | cut -d " " -f 1)
+
+        continue_question "Trying to create tag '$TAG_NAME' at '$NIXPKGS' on commit '$commit'" && \
+            (__git "$NIXPKGS" tag $TAG_FLAGS_NIXPKGS "$TAG_NAME" $commit || \
+            stderr "Could not create tag in nixpkgs clone")
     else
         stderr "Do not generate a tag in the nixpkgs clone"
         stderr "no NIXPKGS given."
