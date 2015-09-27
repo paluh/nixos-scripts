@@ -9,7 +9,7 @@ COMMAND="switch"
 usage() {
     cat <<EOS
 
-    $(help_synopsis "${BASH_SOURCE[0]}" "[-h] [-q] [-c <command>] [-w <working directory>] [-- args...]")
+    $(help_synopsis "${BASH_SOURCE[0]}" "[-h] [-q] [-c <command>] [-w <working directory>]")
 
         -c <command>    Command for nixos-rebuild. See 'man nixos-rebuild' (default: switch)
         -w <path>       Path to your configuration git directory (default: '$RC_CONFIG')
@@ -19,6 +19,7 @@ usage() {
         -f <tag-flags>  Flags for git-tag (see 'git tag --help') (default: '$RC_SWITCH_DEFAULT_TAG_FLAGS')
         -b              Do not call nixos-rebuild at all.
         -q              Don't pass -Q to nixos-rebuild
+        -s <pkgs>       Use these nixpkgs clone instead of channels
         -h              Show this help and exit
 
         This command helps you rebuilding your system and keeping track
@@ -36,13 +37,6 @@ usage() {
             # shared between hosts).
             # Verbosity is on here.
             nix-script -v switch -c switch -w /home/me/config -n
-
-        Everything after a double dash (--) will be passed to nixos-rebuild as
-        additional parameters. For example:
-
-            nix-script switch -c switch -- -I nixpkgs=/home/user/pkgs
-
-        can be used to use your local clone of the nixpkgs repository.
 
 $(help_rcvars                                                       \
     "RC_CONFIG  - Path of your system configuration (git) directory"\
@@ -66,8 +60,9 @@ TAG_FLAGS="$RC_SWITCH_DEFAULT_TAG_FLAGS"
 TAG_FLAGS_NIXPKGS="$RC_SWITCH_DEFAULT_TAG_FLAGS_NIXPKGS"
 DONT_BUILD=
 QUIET=1
+USE_ALTERNATIVE_SOURCE_NIXPKGS=0
 
-while getopts "c:w:t:nbp:f:qh" OPTION
+while getopts "c:w:t:nbp:f:qs:h" OPTION
 do
     case $OPTION in
         c)
@@ -106,6 +101,13 @@ do
         q)
             QUIET=0
             dbg "QUIET = $QUIET"
+            ;;
+
+        s)
+            USE_ALTERNATIVE_SOURCE_NIXPKGS=1
+            ALTERNATIVE_SOURCE_NIXPKGS="$OPTARG"
+            dbg "USE_ALTERNATIVE_SOURCE_NIXPKGS = $USE_ALTERNATIVE_SOURCE_NIXPKGS"
+            dbg "ALTERNATIVE_SOURCE_NIXPKGS     = $ALTERNATIVE_SOURCE_NIXPKGS"
             ;;
 
         h)
@@ -155,7 +157,13 @@ if [[ -z "$DONT_BUILD" ]]
 then
     __q="-Q"
     [[ $QUIET -eq 0 ]] && __q=""
-    explain sudo nixos-rebuild $__q $COMMAND $ARGS
+
+    __altnixpkgs=""
+    [[ $USE_ALTERNATIVE_SOURCE_NIXPKGS -eq 1 ]] && \
+        [[ -d "$ALTERNATIVE_SOURCE_NIXPKGS" ]] && \
+        __altnixpkgs="-I nixpkgs=$ALTERNATIVE_SOURCE_NIXPKGS"
+
+    explain sudo nixos-rebuild $__q $COMMAND $ARGS $__altnixpkgs
     REBUILD_EXIT=$?
 else
     stdout "Do not call nixos-rebuild"
