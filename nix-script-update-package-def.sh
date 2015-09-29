@@ -12,7 +12,7 @@ source $(dirname ${BASH_SOURCE[0]})/nix-utils.sh
 
 usage() {
     cat <<EOS
-    $(help_synopsis "${BASH_SOURCE[0]}" "[-y] [-b] [-c] [-g <nixpkgs path>] -u <url>")
+    $(help_synopsis "${BASH_SOURCE[0]}" "[-y] [-b] [-c] [-g <nixpkgs path>] [-j <n>] [-C <n>] -u <url>")
 
         -y          Don't ask before executing things (optional) (not implemented yet)
         -b          Also test-build the package (optional)
@@ -20,6 +20,8 @@ usage() {
         -g <path>   Path of nixpkgs clone (Default: '$RC_NIXPKGS')
         -c          Don't check out another branch for update
         -d          Don't checkout base branch after successfull run.
+        -j <n>      Pass "-j <n>" to nix-build
+        -C <n>      Pass "--cores <n>" to nix-build
         -h          Show this help and exit
 
         Helper for developers of Nix packages.
@@ -47,6 +49,11 @@ usage() {
             # Verbosity is on.
             nix-script -v update-package-def -b -u http://monitor.nixos.org/patch?p=ffmpeg-full&v=2.7.1&m=Matthias+Beyer
 
+$(help_rcvars                                                       \
+    "RC_UPD_NIX_BUILD_J     - Default number to pass to 'nix-build -j'"
+    "RC_UPD_NIX_BUILD_CORES - Default number to pass to 'nix-build --cores'"
+)
+
 $(help_end "${BASH_SOURCE[0]}")
 EOS
 }
@@ -57,8 +64,10 @@ NIXPKGS=$RC_NIXPKGS
 URL=
 CHECKOUT=1
 DONT_CHECKOUT_BASE=
+J="$RC_UPD_NIX_BUILD_J"
+CORES="$RC_UPD_NIX_BUILD_CORES"
 
-while getopts "ybu:g:cdh" OPTION
+while getopts "ybu:g:cdj:C:h" OPTION
 do
     case $OPTION in
         y)
@@ -89,6 +98,16 @@ do
         d)
             DONT_CHECKOUT_BASE=1
             stdout "DONT_CHECKOUT_BASE = $DONT_CHECKOUT_BASE"
+            ;;
+
+        j)
+            J="$OPTARG"
+            stderr "J = $J"
+            ;;
+
+        C)
+            CORES="$OPTARG"
+            stderr "CORES = $CORES"
             ;;
 
         h)
@@ -160,7 +179,13 @@ fi
 
 if [[ $TESTBUILD -eq 1 ]]
 then
-    ask_execute "Build '$PKG' in nixpkgs clone at '$NIXPKGS'" nix-build -A $PKG -I $NIXPKGS
+    __j=""
+    [[ ! -z "$J" ]] && __j="-j $J"
+
+    __cores=""
+    [[ ! -z "$CORES" ]] && __cores="-j $CORES"
+
+    ask_execute "Build '$PKG' in nixpkgs clone at '$NIXPKGS'" nix-build -A $PKG -I $NIXPKGS $__j $__cores
 fi
 
 #
