@@ -42,3 +42,15 @@ RC_SWITCH_DEFAULT_TAG_FLAGS_NIXPKGS=""
 #
 RC_CONTAINER_CONF_TEMPLATE_DIR=~/.nixos-scripts-container-conf-templates/
 
+
+#
+#
+# Command: update-package-def
+#
+#
+
+#
+# default number to pass to "nix-build -j"
+#
+RC_UPD_NIX_BUILD_J=2
+
