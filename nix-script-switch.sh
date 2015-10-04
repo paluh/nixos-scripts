@@ -9,17 +9,31 @@ COMMAND="switch"
 usage() {
     cat <<EOS
 
-    $(help_synopsis "${BASH_SOURCE[0]}" "[-h] [-q] [-c <command>] [-w <working directory>]")
+    $(help_synopsis "${BASH_SOURCE[0]}" \
+                    "[-h] [-q] [-c <command>] [-w <working directory>]")
 
-        -c <command>    Command for nixos-rebuild. See 'man nixos-rebuild' (default: switch)
-        -w <path>       Path to your configuration git directory (default: '$RC_CONFIG')
+        -c <command>    Command for nixos-rebuild.
+                        See 'man nixos-rebuild' (default: switch)
+
+        -w <path>       Path to your configuration git directory
+                        (default: '$RC_CONFIG')
+
         -n              DON'T include hostname in tag name
+
         -t <tagname>    Custom tag name
-        -p [<pkgs>]     Generate the switch tag in the nixpkgs at <pkgs> as well. (default: '$RC_NIXPKGS')
-        -f <tag-flags>  Flags for git-tag (see 'git tag --help') (default: '$RC_SWITCH_DEFAULT_TAG_FLAGS')
+
+        -p [<pkgs>]     Generate the switch tag in the nixpkgs at <pkgs>
+                        as well.  (default: '$RC_NIXPKGS')
+
+        -f <tag-flags>  Flags for git-tag (see 'git tag --help')
+                        (default: '$RC_SWITCH_DEFAULT_TAG_FLAGS')
+
         -b              Do not call nixos-rebuild at all.
+
         -q              Don't pass -Q to nixos-rebuild
+
         -s <pkgs>       Use these nixpkgs clone instead of channels
+
         -h              Show this help and exit
 
         This command helps you rebuilding your system and keeping track
@@ -36,6 +50,7 @@ usage() {
             # in the tag as well (helpful if your configuration is
             # shared between hosts).
             # Verbosity is on here.
+
             nix-script -v switch -c switch -w /home/me/config -n
 
 $(help_rcvars                                                       \
@@ -49,7 +64,7 @@ $(help_end "${BASH_SOURCE[0]}")
 EOS
 }
 
-COMMAND=
+COMMAND=switch
 ARGS=
 WD=$RC_CONFIG
 TAG_NAME=
@@ -67,18 +82,22 @@ do
     case $OPTION in
         c)
             COMMAND=$OPTARG
+            dbg "COMMAND = $COMMAND"
             ;;
 
         w)
             WD=$OPTARG
+            dbg "WD = $WD"
             ;;
 
         t)
             TAG_NAME=$OPTARG
+            dbg "TAG_NAME = $TAG_NAME"
             ;;
 
         n)
             HOSTNAME=""
+            dbg "HOSTNAME = $HOSTNAME"
             ;;
 
         p)
@@ -88,9 +107,11 @@ do
             fi
             TAG_NIXPKGS=1
             ;;
+            dbg "TAG_NIXPKGS = $TAG_NIXPKGS"
 
         f)
             TAG_FLAGS=$OPTARG
+            dbg "TAG_FLAGS = $TAG_FLAGS"
             ;;
 
         b)
@@ -117,41 +138,14 @@ do
     esac
 done
 
-#
-# Function to generate the tag at $NIXPKGS as well
-#
-tag_nixpkgs() {
-    if [[ ! -d "$1" ]]
-    then
-        stderr "'$1' is not a directory, so can't be a nixpkgs clone"
-        return
-    fi
-
-    commit=$(nixos-version | cut -d . -f 3 | cut -d " " -f 1)
-
-    c_txt="Trying to create tag '$TAG_NAME' at '$1' on commit '$commit'"
-    continue_question "$c_txt" || return
-
-    __git "$1" tag $TAG_FLAGS_NIXPKGS "$TAG_NAME" $commit || \
-        stderr "Could not create tag in nixpkgs clone"
-}
-
-
-dbg "COMMAND    = $COMMAND"
-dbg "WD         = $WD"
-dbg "TAG_NAME   = $TAG_NAME"
-dbg "HOSTNAME   = $HOSTNAME"
-dbg "NIXPKGS    = $NIXPKGS"
-dbg "TAG_FLAGS  = $TAG_FLAGS"
 ARGS=$(echo $* | sed -r 's/(.*)(\-\-(.*)|$)/\2/')
-dbg "ARGS       = $ARGS"
+dbg "ARGS = $ARGS"
 
 [[ -z "$WD" ]] && \
     stderr "No configuration git directory." && \
     stderr "Won't do anything" && exit 1
 
-[[ ! -d "$WD" ]]        && stderr "No directory: $WD" && exit 1
-[[ -z "$COMMAND" ]]     && COMMAND="switch"
+[[ ! -d "$WD" ]] && stderr "No directory: $WD" && exit 1
 
 if [[ -z "$DONT_BUILD" ]]
 then
@@ -170,41 +164,47 @@ else
     REBUILD_EXIT=0
 fi
 
-if [[ $REBUILD_EXIT -eq 0 ]]
-then
-    LASTGEN=$(current_system_generation)
-    sudo -k
-
-    stdout "sudo -k succeeded"
-    stdout "Last generation was: $LASTGEN"
-
-    if [[ -z "$TAG_NAME" ]]
-    then
-        if [[ -z "$HOSTNAME" ]]; then TAG_NAME="nixos-$LASTGEN-$COMMAND"
-        else TAG_NAME="nixos-$HOSTNAME-$LASTGEN-$COMMAND"
-        fi
-    fi
-
-    __git "$WD" tag $TAG_FLAGS "$TAG_NAME"
-
-    if [[ $TAG_NIXPKGS -eq 1 ]]
-    then
-        if [[ ! -z "$NIXPKGS" ]]
-        then
-            stdout "Trying to generate tag in $NIXPKGS"
-            tag_nixpkgs "$NIXPKGS"
-        else
-            stderr "Do not generate a tag in the nixpkgs clon"
-            stderr "no NIXPKGS given."
-            usage
-            stderr "Continuing..."
-        fi
-    else
-        stdout "nixpkgs tag generating disabled"
-    fi
-
-else
-    stderr "Switching failed. Won't executing any further commands."
+[[ ! $REBUILD_EXIT -eq 0 ]] && \
+    stderr "Switching failed. Won't executing any further commands." && \
     exit $REBUILD_EXIT
+
+LASTGEN=$(current_system_generation)
+sudo -k
+
+stdout "sudo -k succeeded"
+stdout "Last generation was: $LASTGEN"
+
+if [[ -z "$TAG_NAME" ]]
+then
+    if [[ -z "$HOSTNAME" ]]; then TAG_NAME="nixos-$LASTGEN-$COMMAND"
+    else TAG_NAME="nixos-$HOSTNAME-$LASTGEN-$COMMAND"
+    fi
 fi
 
+__git "$WD" tag $TAG_FLAGS "$TAG_NAME"
+
+if [[ $TAG_NIXPKGS -eq 1 ]]
+then
+    if [[ ! -z "$NIXPKGS" ]]
+    then
+        stdout "Trying to generate tag in $NIXPKGS"
+        [[ ! -d "$NIXPKGS" ]] && \
+            stderr "'$NIXPKGS' is not a directory, so can't be a nixpkgs clone" && \
+            exit 1
+
+        commit=$(nixos-version | cut -d . -f 3 | cut -d " " -f 1)
+
+        continue_question "Trying to create tag '$TAG_NAME' at '$NIXPKGS' on commit '$commit'" && \
+            (__git "$NIXPKGS" tag $TAG_FLAGS_NIXPKGS "$TAG_NAME" $commit || \
+            stderr "Could not create tag in nixpkgs clone")
+    else
+        stderr "Do not generate a tag in the nixpkgs clone"
+        stderr "no NIXPKGS given."
+        usage
+        stderr "Continuing..."
+    fi
+else
+    stdout "nixpkgs tag generating disabled"
+fi
+
+stdout "Ready."
