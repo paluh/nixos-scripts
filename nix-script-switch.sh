@@ -58,6 +58,10 @@ usage() {
 
             nix-script -v switch -c switch -w /home/me/config -n
 
+        This command does not generate a tag in the configuration if
+        the command is "build". A tag in the nixpkgs clone can be
+        generated, though.
+
 $(help_rcvars                                                       \
     "RC_CONFIG  - Path of your system configuration (git) directory"\
     "RC_NIXPKGS - Path of your nixpkgs clone"                       \
@@ -203,7 +207,12 @@ then
     fi
 fi
 
-__git "$WD" tag $TAG_FLAGS "$TAG_NAME" "$TAG_TARGET"
+if [[ "$COMMAND" =~ "build" ]]
+then
+    stdout "Command is 'build'. Not generating config tag"
+else
+    __git "$WD" tag $TAG_FLAGS "$TAG_NAME" "$TAG_TARGET"
+fi
 
 if [[ $TAG_NIXPKGS -eq 1 ]]
 then
