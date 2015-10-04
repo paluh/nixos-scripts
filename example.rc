@@ -34,6 +34,13 @@ RC_SWITCH_DEFAULT_TAG_FLAGS="-a"
 #
 RC_SWITCH_DEFAULT_TAG_FLAGS_NIXPKGS=""
 
+
+#
+# The name of the remote in your nixpkgs clone which refers to the official
+# repository of nixpkgs. Multiple entries must be seperated with space.
+#
+RC_SWITCH_UPSTREAM_NIXPKGS_REMOTE_NAME=upstream
+
 #
 # Container configuration templates can be put in single files and put in a
 # directory which should be configured here.

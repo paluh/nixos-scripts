@@ -25,6 +25,11 @@ usage() {
         -p [<pkgs>]     Generate the switch tag in the nixpkgs at <pkgs>
                         as well.  (default: '$RC_NIXPKGS')
 
+        -r [<remote>]   Update the <remote> in the <pkgs> before tagging.
+                        Multiple possible, seperate with spaces.
+                        Does nothing if -p is not passed.
+                        (nixpkgs default: '$RC_NIXPKGS', remote default: '$RC_SWITCH_UPSTREAM_NIXPKGS_REMOTE_NAME')
+
         -f <tag-flags>  Flags for git-tag (see 'git tag --help')
                         (default: '$RC_SWITCH_DEFAULT_TAG_FLAGS')
 
@@ -57,7 +62,8 @@ $(help_rcvars                                                       \
     "RC_CONFIG  - Path of your system configuration (git) directory"\
     "RC_NIXPKGS - Path of your nixpkgs clone"                       \
     "RC_SWITCH_DEFAULT_TAG_FLAGS            - Default git-tag flags for tagging in system configuration (git) directory"\
-    "RC_SWITCH_DEFAULT_TAG_FLAGS_NIXPKGS    - Default git-tag flags for tagging in nixpkgs"
+    "RC_SWITCH_DEFAULT_TAG_FLAGS_NIXPKGS    - Default git-tag flags for tagging in nixpkgs"\
+    "RC_SWITCH_UPSTREAM_NIXPKGS_REMOTE_NAME - Default git-remote name for the upstream nixpkgs"
 )
 
 $(help_end "${BASH_SOURCE[0]}")
@@ -73,11 +79,13 @@ TAG_NIXPKGS=0
 NIXPKGS=$RC_NIXPKGS
 TAG_FLAGS="$RC_SWITCH_DEFAULT_TAG_FLAGS"
 TAG_FLAGS_NIXPKGS="$RC_SWITCH_DEFAULT_TAG_FLAGS_NIXPKGS"
+DO_UPSTREAM_UPDATE=0
+UPSTREAM_REMOTE="$RC_SWITCH_UPSTREAM_NIXPKGS_REMOTE_NAME"
 DONT_BUILD=
 QUIET=1
 USE_ALTERNATIVE_SOURCE_NIXPKGS=0
 
-while getopts "c:w:t:nbp:f:qs:h" OPTION
+while getopts "c:w:t:nbp:f:qs:r:h" OPTION
 do
     case $OPTION in
         c)
@@ -129,6 +137,17 @@ do
             ALTERNATIVE_SOURCE_NIXPKGS="$OPTARG"
             dbg "USE_ALTERNATIVE_SOURCE_NIXPKGS = $USE_ALTERNATIVE_SOURCE_NIXPKGS"
             dbg "ALTERNATIVE_SOURCE_NIXPKGS     = $ALTERNATIVE_SOURCE_NIXPKGS"
+            ;;
+
+        r)
+            DO_UPSTREAM_UPDATE=1
+            if [[ -z "$OPTARG" ]]; then
+                dbg "Using default upstream"
+            else
+                UPSTREAM_REMOTE="$OPTARG"
+            fi
+            dbg "DO_UPSTREAM_UPDATE = $DO_UPSTREAM_UPDATE"
+            dbg "UPSTREAM_REMOTE = '$UPSTREAM_REMOTE'"
             ;;
 
         h)
@@ -196,6 +215,20 @@ then
             exit 1
 
         commit=$(nixos-version | cut -d . -f 3 | cut -d " " -f 1)
+
+        if [[ $DO_UPSTREAM_UPDATE -eq 1 ]]
+        then
+            dbg "Starting remote updating..."
+            for remote in $UPSTREAM_REMOTE
+            do
+                dbg "Updating remote '$remote'"
+                __git "$NIXPKGS" fetch "$remote"
+                dbg "Ready updating remote '$remote'"
+            done
+            dbg "... ready remote updating"
+        else
+            dbg "Not updating remote upstream here."
+        fi
 
         continue_question "Trying to create tag '$TAG_NAME' at '$NIXPKGS' on commit '$commit'" && \
             (__git "$NIXPKGS" tag $TAG_FLAGS_NIXPKGS "$TAG_NAME" $commit || \
