@@ -6,6 +6,21 @@ Yellow='\e[0;33m'
 Green='\e[0;32m'
 
 #
+# Do something explicitely without verbosity output
+#
+__quiet__() {
+    VERBOSE=0 $*
+}
+
+#
+# Do something explicitely without debug and verbosity output (with no output at
+# all therefor)
+#
+__silent__() {
+    DEBUG=0 __quiet__ $*
+}
+
+#
 # Check whether a string (2nd arg) contains a substring (1st arg)
 #
 stringcontains() {
