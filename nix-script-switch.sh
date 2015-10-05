@@ -170,7 +170,7 @@ dbg "ARGS = $ARGS"
 
 [[ ! -d "$WD" ]] && stderr "No directory: $WD" && exit 1
 
-TAG_TARGET=$(__git "$WD" rev-parse HEAD)
+TAG_TARGET=$(__quiet__ __git "$WD" rev-parse HEAD)
 stdout "Tag in config will be generated at '$TAG_TARGET'"
 
 if [[ -z "$DONT_BUILD" ]]
