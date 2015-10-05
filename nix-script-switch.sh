@@ -118,8 +118,8 @@ do
                 NIXPKGS=$OPTARG
             fi
             TAG_NIXPKGS=1
-            ;;
             dbg "TAG_NIXPKGS = $TAG_NIXPKGS"
+            ;;
 
         f)
             TAG_FLAGS=$OPTARG
