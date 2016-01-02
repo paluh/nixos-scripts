@@ -223,7 +223,7 @@ then
             stderr "'$NIXPKGS' is not a directory, so can't be a nixpkgs clone" && \
             exit 1
 
-        commit=$(nixos-version | cut -d . -f 3 | cut -d " " -f 1)
+        commit=$(nixos-version | sed -r 's,(.*)\.(.*)\ (.*),\2,')
 
         if [[ $DO_UPSTREAM_UPDATE -eq 1 ]]
         then
