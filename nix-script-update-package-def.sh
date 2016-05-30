@@ -193,7 +193,7 @@ then
     [[ ! -z "$J" ]] && __j="-j $J"
 
     __cores=""
-    [[ ! -z "$CORES" ]] && __cores="-j $CORES"
+    [[ ! -z "$CORES" ]] && __cores="--cores $CORES"
 
     ask_execute "Build '$PKG' in nixpkgs clone at '$NIXPKGS'" nix-build -A $PKG -I $NIXPKGS $__j $__cores
 fi
