@@ -184,6 +184,7 @@ then
     stdout "Patch applied."
 else
     stderr "Patch apply failed. I'm exiting now"
+    __git "$NIXPKGS" am --abort
     exit 1
 fi
 
