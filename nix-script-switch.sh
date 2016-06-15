@@ -22,6 +22,8 @@ usage() {
 
         -t <tagname>    Custom tag name
 
+        -C              Append channel generation in tag (<tag>-channel-<gen>)
+
         -p [<pkgs>]     Generate the switch tag in the nixpkgs at <pkgs>
                         as well.  (default: '$RC_NIXPKGS')
 
@@ -78,6 +80,7 @@ COMMAND=switch
 ARGS=
 WD=$RC_CONFIG
 TAG_NAME=
+APPEND_CHANNEL_GEN=
 HOSTNAME="$(hostname)"
 TAG_NIXPKGS=0
 NIXPKGS=$RC_NIXPKGS
@@ -89,7 +92,7 @@ DONT_BUILD=
 QUIET=1
 USE_ALTERNATIVE_SOURCE_NIXPKGS=0
 
-while getopts "c:w:t:nbp:f:qs:r:h" OPTION
+while getopts "c:w:t:Cnbp:f:qs:r:h" OPTION
 do
     case $OPTION in
         c)
@@ -105,6 +108,11 @@ do
         t)
             TAG_NAME=$OPTARG
             dbg "TAG_NAME = $TAG_NAME"
+            ;;
+
+        C)
+            APPEND_CHANNEL_GEN=1
+            dbg "APPEND_CHANNEL_GEN = $APPEND_CHANNEL_GEN"
             ;;
 
         n)
@@ -205,6 +213,14 @@ then
     if [[ -z "$HOSTNAME" ]]; then TAG_NAME="nixos-$LASTGEN-$COMMAND"
     else TAG_NAME="nixos-$HOSTNAME-$LASTGEN-$COMMAND"
     fi
+fi
+
+if [[ $APPEND_CHANNEL_GEN -eq 1 ]]; then
+    dbg "Appending channel generation to tag name"
+    TAG_NAME="${TAG_NAME}-channel-$(current_channel_generation)"
+    dbg "TAG_NAME = $TAG_NAME"
+else
+    dbg "Not appending channel generation to tag name"
 fi
 
 if [[ "$COMMAND" =~ "build" ]]
