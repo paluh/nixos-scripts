@@ -143,6 +143,13 @@ current_channel_generation() {
 }
 
 #
+# Get the channel names
+#
+channel_names() {
+    sudo nix-channel --list | cut -d " " -f 1
+}
+
+#
 # Ask the user whether to continue or not
 #
 continue_question() {
