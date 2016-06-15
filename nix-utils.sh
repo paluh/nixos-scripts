@@ -180,6 +180,16 @@ __git_current_branch() {
     ([[ -z "$branch_name" ]] && git rev-parse HEAD) || echo $branch_name
 }
 
+# Returns the number of untracked files in "$1"
+__git_count_untracked() {
+    __git "$1" status --porcelain 2>/dev/null | grep "^??" | wc -l
+}
+
+# Returns the number of uncommmitted files in "$1"
+__git_count_uncommitted() {
+    __git "$1" status --porcelain 2>/dev/null| egrep "^(M| M)" | wc -l
+}
+
 # Argument 1: Caller script name, format: "nix-script"
 caller_util_all_commands() {
     find $(dirname ${BASH_SOURCE[0]}) -type f -name "${1}-*.sh"
