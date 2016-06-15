@@ -7,6 +7,7 @@ usage() {
     $(help_synopsis "channel" "update [-h] [-t <name>] [-w <cfgdir>] [-n]")
 
         -t <name>   | Name for the new tag, instead of nixos-<host>-channel-<num>
+        -n          | Add channel name (from config) in the tag name, currently: $RC_CHANNEL_NAME
         -w <cfgdir> | Alternative config dir, default: $RC_CONFIG
         -n          | DON'T include hostname in tag name
         -h          | Show this help and exit
@@ -16,6 +17,7 @@ EOS
 }
 
 TAG_NAME=""
+ADD_CHANNEL_NAME=0
 CONFIG=$RC_CONFIG
 HOST="$(hostname)"
 
@@ -25,6 +27,11 @@ do
         t)
             TAG_NAME=$OPTARG
             dbg "TAG_NAME = $TAG_NAME"
+            ;;
+
+        n)
+            ADD_CHANNEL_NAME=1
+            dbg "ADD_CHANNEL_NAME = $ADD_CHANNEL_NAME"
             ;;
 
         w)
@@ -59,6 +66,17 @@ if [[ -z "$NAME" ]]
 then
     TAG_NAME="nixos-$([[ ! -z "$HOST" ]] && echo "$HOST-")channel-$(current_channel_generation)"
     stdout "Tag name: '$TAG_NAME'"
+fi
+
+if [[ $ADD_CHANNEL_NAME -eq 1 ]]; then
+    [[ -z "$RC_CHANNEL_NAME" ]] && \
+        stderr "RC SETTING MISSING: RC_CHANNEL_NAME" && exit 1
+
+    dbg "Add the channel name in the tag"
+    TAG_NAME="${TAG_NAME}-${RC_CHANNEL_NAME}"
+    dbg "TAG_NAME = ${TAG_NAME}"
+else
+    dbg "Do not add the channel name in the tag"
 fi
 
 stdout "Resetting sudo password"
