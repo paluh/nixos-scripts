@@ -170,6 +170,38 @@ dbg "ARGS = $ARGS"
 
 [[ ! -d "$WD" ]] && stderr "No directory: $WD" && exit 1
 
+# If there are untracked files and
+# if the setting $RC_SWITCH_ALLOW_WITH_UNTRACKED_REPO_FILES is OFF
+# then exit with 1
+[[ $(__git_count_untracked "$WD") -ne 0 ]] && \
+    [[ $RC_SWITCH_ALLOW_WITH_UNTRACKED_REPO_FILES -eq 0 ]] && \
+    stderr "Untracked files in '$WD'" && exit 1
+
+# If there are uncommitted files and
+# If RC_SWITCH_ALLOW_WITH_UNCOMMITED_REPO_FILES is OFF
+if [[ $(__git_count_uncommitted "$WD") -ne 0 ]]; then
+    if [[ $RC_SWITCH_ALLOW_WITH_UNCOMMITED_REPO_FILES -eq 0 ]]; then
+        stderr "Not allowing switch with uncommitted files in '$WD'"
+        exit 1
+    else
+        # If switching is allowed, we check whether we should commit these
+        # uncommitted changes
+        if [[ $RC_SWITCH_ASK_TO_COMMIT_UNCOMMITTED_REPO_FILES -eq 1 ]]; then
+            dbg "Asking to commit the uncommitted changes"
+            ask_execute __git "$WD" commit -a
+            dbg "Changes should be committed now. If not, we exit."
+            if [[ $(__git_count_uncommitted "$WD") -ne 0 ]]; then
+                stderr "Changes still not committed."
+                exit 1
+            fi
+        else
+            dbg "Not asking to commit the uncommitted changes"
+        fi
+
+    fi
+fi
+
+
 TAG_TARGET=$(__quiet__ __git "$WD" rev-parse HEAD)
 stdout "Tag in config will be generated at '$TAG_TARGET'"
 
