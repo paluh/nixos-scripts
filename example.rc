@@ -42,6 +42,23 @@ RC_SWITCH_DEFAULT_TAG_FLAGS_NIXPKGS=""
 RC_SWITCH_UPSTREAM_NIXPKGS_REMOTE_NAME=upstream
 
 #
+# Allow switch with untracked files in the configuration repository
+#
+RC_SWITCH_ALLOW_WITH_UNTRACKED_REPO_FILES=1
+
+#
+# Allow switch with uncommitted files in the configuration repository
+#
+RC_SWITCH_ALLOW_WITH_UNCOMMITED_REPO_FILES=1
+
+#
+# Ask to commit changes if there are uncommited files in the configuration
+# repository (git commit -a) - this variable will only be used if
+# RC_SWITCH_ALLOW_WITH_UNCOMMITED_REPO_FILES=1
+#
+RC_SWITCH_ASK_TO_COMMIT_UNCOMMITTED_REPO_FILES=0
+
+#
 # Container configuration templates can be put in single files and put in a
 # directory which should be configured here.
 #
