@@ -78,3 +78,8 @@ RC_UPD_PUSH=0
 #
 RC_UPD_PUSH_REMOTE="github"
 
+#
+# Channel name
+#
+RC_CHANNEL_NAME="unstable"
+
