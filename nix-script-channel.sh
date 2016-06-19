@@ -51,5 +51,7 @@ stdout "SCRIPT = $SCRIPT"
 stdout "Parsing args for '$1'"
 SCRIPT_ARGS=$(echo $* | sed -r "s/(.*)$1(.*)/\2/")
 
+[[ -f "$RC" ]] && { dbg "Config file found. Sourcing: '$RC'"; source $RC; }
+
 stdout "Calling: '$SCRIPT $SCRIPT_ARGS'"
-RC_CONFIG=$RC_CONFIG RC_NIXPKGS=$RC_NIXPKGS exec bash $SCRIPT $SCRIPT_ARGS
+RC=$RC RC_CONFIG=$RC_CONFIG RC_NIXPKGS=$RC_NIXPKGS exec bash $SCRIPT $SCRIPT_ARGS

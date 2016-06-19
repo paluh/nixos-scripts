@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 source $(dirname ${BASH_SOURCE[0]})/nix-utils.sh
+[[ -f "$RC" ]] && { dbg "Config file found. Sourcing: '$RC'"; source $RC; }
 
 usage() {
     cat <<EOS
