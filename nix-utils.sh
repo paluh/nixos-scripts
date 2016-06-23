@@ -110,8 +110,9 @@ help_end() {
 # Explain the next command
 #
 explain() {
-    stdout "$*"
-    $*
+    local args=$(printf '%q ' "$@")
+    stdout "${args% }"
+    "$*"
 }
 
 #
