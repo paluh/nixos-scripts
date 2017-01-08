@@ -22,7 +22,11 @@ usage() {
 
         -t <tagname>    Custom tag name
 
-        -C              Append channel generation in tag (<tag>-channel-<gen>)
+        -C              Append channel generation in tag (<tag>-channel-<gen>-<sha1>)
+                        Expl:
+                            <tag> : nixos-<hostname>
+                            <gen> : Number of the generation
+                            <sha1>: SHA1 (abbrev) of the commit of the channel in nixpkgs
 
         -p [<pkgs>]     Generate the switch tag in the nixpkgs at <pkgs>
                         as well.  (default: '$RC_NIXPKGS')
@@ -217,7 +221,8 @@ fi
 
 if [[ $APPEND_CHANNEL_GEN -eq 1 ]]; then
     dbg "Appending channel generation to tag name"
-    TAG_NAME="${TAG_NAME}-channel-$(current_channel_generation)"
+    commit=$(nixos-version | sed -r 's,(.*)\.(.*)\ (.*),\2,')
+    TAG_NAME="${TAG_NAME}-channel-$(current_channel_generation)-${commit}"
     dbg "TAG_NAME = $TAG_NAME"
 else
     dbg "Not appending channel generation to tag name"
