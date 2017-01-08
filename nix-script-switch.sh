@@ -30,6 +30,10 @@ usage() {
 
         -p [<pkgs>]     Generate the switch tag in the nixpkgs at <pkgs>
                         as well.  (default: '$RC_NIXPKGS')
+                        (Warning: deprecated
+                            This flag is deprecated as tagging with the channel
+                            commit hash is now default
+                        )
 
         -r [<remote>]   Update the <remote> in the <pkgs> before tagging.
                         Multiple possible, seperate with spaces.
@@ -239,6 +243,10 @@ if [[ $TAG_NIXPKGS -eq 1 ]]
 then
     if [[ ! -z "$NIXPKGS" ]]
     then
+        stderr "This option is deprecated."
+        stderr "Therefor it might be removed in the next version."
+        stderr "Please complain in the official nixos-scripts repository."
+
         stdout "Trying to generate tag in $NIXPKGS"
         [[ ! -d "$NIXPKGS" ]] && \
             stderr "'$NIXPKGS' is not a directory, so can't be a nixpkgs clone" && \
