@@ -5,12 +5,12 @@ source $(dirname ${BASH_SOURCE[0]})/nix-utils.sh
 
 usage() {
     cat <<EOS
-    $(help_synopsis "channel" "update [-h] [-t <name>] [-w <cfgdir>] [-n]")
+    $(help_synopsis "channel" "update [-h] [-t <name>] [-w <cfgdir>] [-n] [-N]")
 
         -t <name>   | Name for the new tag, instead of nixos-<host>-channel-<num>
         -n          | Add channel name (from config) in the tag name, currently: $RC_CHANNEL_NAME
         -w <cfgdir> | Alternative config dir, default: $RC_CONFIG
-        -n          | DON'T include hostname in tag name
+        -N          | DON'T include hostname in tag name
         -h          | Show this help and exit
 
 $(help_end)
@@ -22,7 +22,7 @@ ADD_CHANNEL_NAME=0
 CONFIG=$RC_CONFIG
 HOST="$(hostname)"
 
-while getopts "t:w:nh" OPTION
+while getopts "t:w:nNh" OPTION
 do
     case $OPTION in
         t)
@@ -40,7 +40,7 @@ do
             dbg "CONFIG = $CONFIG"
             ;;
 
-        n)
+        N)
             HOST=""
             dbg "HOST = $HOST"
             ;;
