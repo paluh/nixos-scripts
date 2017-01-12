@@ -22,10 +22,18 @@ usage() {
 
         -t <tagname>    Custom tag name
 
-        -C              Append channel generation in tag (<tag>-channel-<gen>)
+        -C              Append channel generation in tag (<tag>-channel-<gen>-<sha1>)
+                        Expl:
+                            <tag> : nixos-<hostname>
+                            <gen> : Number of the generation
+                            <sha1>: SHA1 (abbrev) of the commit of the channel in nixpkgs
 
         -p [<pkgs>]     Generate the switch tag in the nixpkgs at <pkgs>
                         as well.  (default: '$RC_NIXPKGS')
+                        (Warning: deprecated
+                            This flag is deprecated as tagging with the channel
+                            commit hash is now default
+                        )
 
         -r [<remote>]   Update the <remote> in the <pkgs> before tagging.
                         Multiple possible, seperate with spaces.
@@ -217,7 +225,8 @@ fi
 
 if [[ $APPEND_CHANNEL_GEN -eq 1 ]]; then
     dbg "Appending channel generation to tag name"
-    TAG_NAME="${TAG_NAME}-channel-$(current_channel_generation)"
+    commit=$(nixos-version | sed -r 's,(.*)\.(.*)\ (.*),\2,')
+    TAG_NAME="${TAG_NAME}-channel-$(current_channel_generation)-${commit}"
     dbg "TAG_NAME = $TAG_NAME"
 else
     dbg "Not appending channel generation to tag name"
@@ -234,6 +243,10 @@ if [[ $TAG_NIXPKGS -eq 1 ]]
 then
     if [[ ! -z "$NIXPKGS" ]]
     then
+        stderr "This option is deprecated."
+        stderr "Therefor it might be removed in the next version."
+        stderr "Please complain in the official nixos-scripts repository."
+
         stdout "Trying to generate tag in $NIXPKGS"
         [[ ! -d "$NIXPKGS" ]] && \
             stderr "'$NIXPKGS' is not a directory, so can't be a nixpkgs clone" && \
