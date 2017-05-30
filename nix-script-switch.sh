@@ -186,6 +186,12 @@ dbg "ARGS = $ARGS"
 
 [[ ! -d "$WD" ]] && stderr "No directory: $WD" && exit 1
 
+[[ "$COMMAND" != "switch" ]] && [[ $APPEND_CHANNEL_GEN == 1 ]] && {
+    stderr "Cannot append channel generation if non-switch build,"
+    stderr "as this is currently not supported."
+    exit 1
+}
+
 TAG_TARGET=$(__quiet__ __git "$WD" rev-parse HEAD)
 stdout "Tag in config will be generated at '$TAG_TARGET'"
 
