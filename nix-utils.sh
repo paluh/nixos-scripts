@@ -53,7 +53,7 @@ stdout() {
 # List all available commands as script path
 #
 all_commands() {
-    find $(dirname ${BASH_SOURCE[0]}) \
+    find $(package_dir) \
         -type f \
         -executable \
         -name "nix-script-*.sh"
@@ -65,7 +65,7 @@ all_commands() {
 # Does not check whether the file exists.
 #
 script_for() {
-    echo "$(dirname ${BASH_SOURCE[0]})/nix-script-${1}.sh"
+    echo "$(package_dir)/nix-script-${1}.sh"
 }
 
 #
@@ -73,7 +73,7 @@ script_for() {
 #
 scriptname_to_command() {
     callee=$([ -z "$2" ] && echo "nix-script" || echo "$2")
-    echo "$1" | sed -r "s,$(dirname ${BASH_SOURCE[0]})/$callee-(.*)\.sh$,\1,"
+    echo "$1" | sed -r "s,$(package_dir)/$callee-(.*)\.sh$,\1,"
 }
 
 #
@@ -187,9 +187,24 @@ __git_current_branch() {
     ([[ -z "$branch_name" ]] && git rev-parse HEAD) || echo $branch_name
 }
 
+# Gets package dir.
+# Source: https://www.ostricher.com/2014/10/the-right-way-to-get-the-directory-of-a-bash-script/
+package_dir() {
+     SOURCE="${BASH_SOURCE[0]}"
+     # While $SOURCE is a symlink, resolve it
+     while [ -h "$SOURCE" ]; do
+          DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+          SOURCE="$( readlink "$SOURCE" )"
+          # If $SOURCE was a relative symlink (so no "/" as prefix, need to resolve it relative to the symlink base directory
+          [[ $SOURCE != /* ]] && SOURCE="$DIR/$SOURCE"
+     done
+     DIR="$( cd -P "$( dirname "$SOURCE" )" && pwd )"
+     echo "$DIR"
+}
+
 # Argument 1: Caller script name, format: "nix-script"
 caller_util_all_commands() {
-    find $(dirname ${BASH_SOURCE[0]}) -type f -name "${1}-*.sh"
+    find $(package_dir) -type f -name "${1}-*.sh"
 }
 
 # Argument 1: Caller script name, format: "nix-script"
@@ -203,7 +218,7 @@ caller_util_list_subcommands_for() {
 # Argument 1: Caller script name
 # Argzment 2: Command name
 caller_util_script_for() {
-    echo "$(dirname ${BASH_SOURCE[0]})/${1}-${2}.sh"
+    echo "$(package_dir)/${1}-${2}.sh"
 }
 
 # Argument 1: Caller script name
