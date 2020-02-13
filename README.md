@@ -4,6 +4,8 @@ Utility scripts collection for working with nixos tools.
 
 ## Usage
 
+### CLI
+
 Everything can be called by using the `nix-script` executable:
 
 ```bash
@@ -15,6 +17,20 @@ $ nix-script ls-profiles
 The `nix-script` executable can be called with `-l` to list the available
 commands or `-h` to get the help text. Calling `nix-script -v <something>`
 will turn on verbosity and each script will explain what it does.
+
+### Install
+
+There is `default.nix` expression which allows you to build this package.
+Just choose `rev` and provide appropriate `sha256`:
+
+```nix
+nixos-scripts = pkgs.callPackage (pkgs.fetchFromGitHub {
+  owner = "matthiasbeyer";
+  repo = "nixos-scripts";
+  rev = "...";
+  sha256 = "...";
+}) {}
+```
 
 ## Examples
 
