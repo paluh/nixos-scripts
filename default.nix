@@ -1,7 +1,7 @@
 { stdenv, fetchurl, mpd_clientlib, curl, glib, pkgconfig }:
 
 stdenv.mkDerivation rec {
-  version = "0.1";
+  version = "0.3.3";
   name = "nixos-scripts-${version}";
 
   src = ./.;
